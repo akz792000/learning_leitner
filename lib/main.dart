@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:learning_leitner/repository/CardModelRepository.dart';
+import 'package:learning_leitner/repository/CardRepository.dart';
 
-import 'model/CardModel.dart';
+import 'entity/CardEntity.dart';
 import 'view/home/HomeView.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:sizer/sizer.dart';
@@ -26,16 +26,14 @@ Future<void> setup() async {
   await Hive.initFlutter();
 
   // Registering the adapter
-  Hive.registerAdapter(CardModelAdapter());
+  Hive.registerAdapter(CardEntityAdapter());
 
   // Opening the box
-  await Hive.openBox(CardModelRepository.boxId);
+  await Hive.openBox(CardRepository.boxId);
 
   // get the directory where the hive save data
   Directory directory = await path_provider.getApplicationDocumentsDirectory();
-  if (kDebugMode) {
-    print(directory.path);
-  }
+  debugPrint(directory.path);
 }
 
 class MyApp extends StatefulWidget {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:learning_leitner/model/CardModel.dart';
+import 'package:learning_leitner/entity/CardEntity.dart';
 import 'package:learning_leitner/util/DateTimeUtil.dart';
 
-import '../repository/CardModelRepository.dart';
+import '../repository/CardRepository.dart';
 import 'home/HomeView.dart';
 
 class PersistView extends StatefulWidget {
@@ -13,7 +13,7 @@ class PersistView extends StatefulWidget {
 }
 
 class _PersistViewState extends State<PersistView> {
-  final _cardModelRepository = CardModelRepository();
+  final _cardRepository = CardRepository();
   final _faController = TextEditingController();
   final _enController = TextEditingController();
   final _personFormKey = GlobalKey<FormState>();
@@ -27,15 +27,16 @@ class _PersistViewState extends State<PersistView> {
 
   void _onPersist() async {
     if (_personFormKey.currentState!.validate()) {
-      var cardModel = CardModel(
+      var cardEntity = CardEntity(
         id: 0,
         fa: _faController.text,
         en: _enController.text,
-        level: CardModel.DEFAULT_LEVEL,
+        level: CardEntity.DEFAULT_LEVEL,
         created: DateTimeUtil.now(),
         modified: DateTimeUtil.now(),
+        order: 0
       );
-      _cardModelRepository.persist(cardModel);
+      _cardRepository.persist(cardEntity);
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => const HomeView(),
@@ -48,7 +49,9 @@ class _PersistViewState extends State<PersistView> {
   build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: const Text('Persist Card')),
+      appBar: AppBar(
+        title: const Text('Persist Card'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

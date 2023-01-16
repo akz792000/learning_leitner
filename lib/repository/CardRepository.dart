@@ -4,9 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:learning_leitner/util/DateTimeUtil.dart';
 
-import '../model/CardModel.dart';
+import '../entity/CardEntity.dart';
 
-class CardModelRepository {
+class CardRepository {
   static const boxId = "card";
 
   ValueListenable<Box> listenable() {
@@ -14,18 +14,18 @@ class CardModelRepository {
     return box.listenable();
   }
 
-  Future<int> persist(CardModel cardModel) async {
+  Future<int> persist(CardEntity cardEntity) async {
     var box = Hive.box(boxId);
-    if (cardModel.id == 0) {
-      cardModel.id = await box.add(cardModel);
+    if (cardEntity.id == 0) {
+      cardEntity.id = await box.add(cardEntity);
     }
-    await box.put(cardModel.id, cardModel);
-    return cardModel.id;
+    await box.put(cardEntity.id, cardEntity);
+    return cardEntity.id;
   }
 
-  Future<void> remove(CardModel cardModel) async {
+  Future<void> remove(CardEntity cardEntity) async {
     var box = Hive.box(boxId);
-    await box.delete(cardModel.id);
+    await box.delete(cardEntity.id);
   }
 
   void removeAll() async {
@@ -33,12 +33,12 @@ class CardModelRepository {
     await box.clear();
   }
 
-  Future<void> merge(CardModel cardModel) async {
+  Future<void> merge(CardEntity cardEntity) async {
     var box = Hive.box(boxId);
-    await box.put(cardModel.id, cardModel);
+    await box.put(cardEntity.id, cardEntity);
   }
 
-  CardModel? findById(int id) {
+  CardEntity? findById(int id) {
     var box = Hive.box(boxId);
     return box.get(id);
   }
@@ -87,7 +87,11 @@ class CardModelRepository {
     for (var key in sortedKeys) {
       var item = groupLevel[key];
       if (item['dates'].length >= pow(2, key - 1)) {
-        result.addAll(item['items']);
+        var orders = item['items']
+          ..sort((e1, e2) {
+            return Comparable.compare(e1.order, e2.order);
+          });
+        result.addAll(orders);
       }
     }
     return result;

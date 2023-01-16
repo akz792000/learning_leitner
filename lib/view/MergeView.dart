@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:learning_leitner/model/CardModel.dart';
-import 'package:learning_leitner/repository/CardModelRepository.dart';
+import 'package:flutter/services.dart';
+import 'package:learning_leitner/entity/CardEntity.dart';
+import 'package:learning_leitner/repository/CardRepository.dart';
 import 'package:learning_leitner/util/DateTimeUtil.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class MergeView extends StatefulWidget {
-  final CardModel cardModel;
+  final CardEntity cardEntity;
 
   const MergeView({
     super.key,
-    required this.cardModel,
+    required this.cardEntity,
   });
 
   @override
@@ -17,7 +18,7 @@ class MergeView extends StatefulWidget {
 }
 
 class _MergeViewState extends State<MergeView> {
-  final _cardModelRepository = CardModelRepository();
+  final _cardRepository = CardRepository();
   final _personFormKey = GlobalKey<FormState>();
 
   late final TextEditingController _idController;
@@ -26,6 +27,7 @@ class _MergeViewState extends State<MergeView> {
   late final TextEditingController _levelController;
   late final tz.TZDateTime _created;
   late final tz.TZDateTime _modified;
+  late final TextEditingController _orderController;
 
   String? _fieldValidator(String? value) {
     if (value == null || value.isEmpty) {
@@ -38,26 +40,30 @@ class _MergeViewState extends State<MergeView> {
   void initState() {
     super.initState();
     debugPrint("Home init call");
-    _idController = TextEditingController(text: widget.cardModel.id.toString());
-    _faController = TextEditingController(text: widget.cardModel.fa);
-    _enController = TextEditingController(text: widget.cardModel.en);
+    _idController =
+        TextEditingController(text: widget.cardEntity.id.toString());
+    _faController = TextEditingController(text: widget.cardEntity.fa);
+    _enController = TextEditingController(text: widget.cardEntity.en);
     _levelController =
-        TextEditingController(text: widget.cardModel.level.toString());
-    _created = widget.cardModel.created;
-    _modified = widget.cardModel.modified;
+        TextEditingController(text: widget.cardEntity.level.toString());
+    _created = widget.cardEntity.created;
+    _modified = widget.cardEntity.modified;
+    _orderController =
+        TextEditingController(text: widget.cardEntity.order.toString());
   }
 
   _onMerge() {
     if (_personFormKey.currentState!.validate()) {
-      var cardModel = CardModel(
+      var cardEntity = CardEntity(
         id: int.parse(_idController.text),
         fa: _faController.text,
         en: _enController.text,
-        level: CardModel.DEFAULT_LEVEL,
+        level: CardEntity.DEFAULT_LEVEL,
         created: _created,
         modified: DateTimeUtil.now(),
+        order: int.parse(_orderController.text),
       );
-      _cardModelRepository.merge(cardModel);
+      _cardRepository.merge(cardEntity);
       Navigator.of(context).pop();
     }
   }
@@ -89,6 +95,16 @@ class _MergeViewState extends State<MergeView> {
                 validator: _fieldValidator,
               ),
               const SizedBox(height: 24.0),
+              const Text('Level'),
+              TextFormField(
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ],
+                controller: _levelController,
+                validator: _fieldValidator,
+              ),
+              const SizedBox(height: 24.0),
               const Text('Created'),
               TextFormField(
                 initialValue: DateTimeUtil.adjustDateTime(_created),
@@ -99,6 +115,16 @@ class _MergeViewState extends State<MergeView> {
               TextFormField(
                 initialValue: DateTimeUtil.adjustDateTime(_modified),
                 readOnly: true,
+              ),
+              const SizedBox(height: 24.0),
+              const Text('Order'),
+              TextFormField(
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ],
+                controller: _orderController,
+                validator: _fieldValidator,
               ),
               const Spacer(),
               Padding(

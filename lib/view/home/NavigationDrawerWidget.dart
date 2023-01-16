@@ -50,18 +50,10 @@ class NavigationDrawerWidget extends StatelessWidget {
           runSpacing: 16,
           children: [
             ListTile(
-              leading: const Icon(Icons.home_outlined),
-              title: const Text("Home"),
-              onTap: () => Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => const HomeView(),
-                ),
-              ),
-            ),
-            ListTile(
               leading: const Icon(Icons.account_tree_outlined),
               title: const Text("Learning"),
               onTap: () {
+                // remove Navigation Drawer
                 Navigator.pop(context);
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -74,6 +66,7 @@ class NavigationDrawerWidget extends StatelessWidget {
               leading: const Icon(Icons.download),
               title: const Text("Download"),
               onTap: () {
+                // remove Navigation Drawer
                 Navigator.pop(context);
                 Navigator.of(context).push(
                   MaterialPageRoute(

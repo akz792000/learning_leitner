@@ -1,22 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'CardModel.dart';
+part of 'CardEntity.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class CardModelAdapter extends TypeAdapter<CardModel> {
+class CardEntityAdapter extends TypeAdapter<CardEntity> {
   @override
   final int typeId = 1;
 
   @override
-  CardModel read(BinaryReader reader) {
+  CardEntity read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return CardModel(
+    return CardEntity(
       id: fields[0] as int,
       fa: fields[1] as String,
       en: fields[2] as String,
@@ -27,11 +27,12 @@ class CardModelAdapter extends TypeAdapter<CardModel> {
       modified: fields[5] != null
           ? tz.TZDateTime.from(fields[5], tz.local)
           : tz.TZDateTime.now(tz.local),
+      order: fields[6] != null ? fields[6] as int : 0,
     );
   }
 
   @override
-  void write(BinaryWriter writer, CardModel obj) {
+  void write(BinaryWriter writer, CardEntity obj) {
     writer
       ..writeByte(6)
       ..writeByte(0)
@@ -45,7 +46,9 @@ class CardModelAdapter extends TypeAdapter<CardModel> {
       ..writeByte(4)
       ..write(obj.created)
       ..writeByte(5)
-      ..write(obj.modified);
+      ..write(obj.modified)
+      ..writeByte(6)
+      ..write(obj.order);
   }
 
   @override
@@ -54,7 +57,7 @@ class CardModelAdapter extends TypeAdapter<CardModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is CardModelAdapter &&
+      other is CardEntityAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

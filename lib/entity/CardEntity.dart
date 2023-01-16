@@ -1,11 +1,12 @@
+import 'dart:ffi';
+
 import 'package:hive/hive.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-part 'CardModel.g.dart';
+part 'CardEntity.g.dart';
 
 @HiveType(typeId: 1)
-class CardModel {
-
+class CardEntity {
   static const int DEFAULT_LEVEL = 1;
 
   @HiveField(0)
@@ -26,15 +27,22 @@ class CardModel {
   @HiveField(4)
   tz.TZDateTime modified;
 
-  // generated
-  bool flag = false;
+  @HiveField(5)
+  int order;
 
-  CardModel({
+  // generated
+  bool orderChanged = false;
+
+  // generated
+  String? flag;
+
+  CardEntity({
     required this.id,
     required this.fa,
     required this.en,
     required this.level,
     required this.created,
     required this.modified,
+    required this.order,
   });
 }

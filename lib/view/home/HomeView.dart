@@ -3,8 +3,8 @@ import 'package:hive/hive.dart';
 import 'package:learning_leitner/view/MergeView.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:learning_leitner/view/PersistView.dart';
-import 'package:learning_leitner/repository/CardModelRepository.dart';
-import '../../model/CardModel.dart';
+import 'package:learning_leitner/repository/CardRepository.dart';
+import '../../entity/CardEntity.dart';
 import '../../util/DialogUtil.dart';
 import 'NavigationDrawerWidget.dart';
 
@@ -16,29 +16,29 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  final _cardModelRepository = CardModelRepository();
+  final _cardRepository = CardRepository();
   late int _count;
 
   @override
   void initState() {
     super.initState();
-    debugPrint("Home init call");
+    debugPrint("Home init state");
     _setCount();
   }
 
   void _setCount() {
     setState(() {
-      _count = _cardModelRepository.findAll().length;
+      _count = _cardRepository.findAll().length;
     });
   }
 
-  void _onRemove(CardModel cardModel) {
+  void _onRemove(CardEntity cardEntity) {
     DialogUtil.okCancel(
       context,
       "Do you want to delete this item?",
-      cardModel.en,
+      cardEntity.en,
       () {
-        _cardModelRepository.remove(cardModel);
+        _cardRepository.remove(cardEntity);
         _setCount();
       },
     );
@@ -50,7 +50,7 @@ class _HomeViewState extends State<HomeView> {
       "Alert",
       "Do you want to delete all items?",
       () {
-        _cardModelRepository.removeAll();
+        _cardRepository.removeAll();
         setState(() {
           _count = 0;
         });
@@ -59,14 +59,15 @@ class _HomeViewState extends State<HomeView> {
   }
 
   @override
-  build(BuildContext context) {
+  Widget build(BuildContext context) {
+    debugPrint("Home build");
     return Scaffold(
       appBar: AppBar(
         title: Text("Card: $_count"),
       ),
       drawer: const NavigationDrawerWidget(),
       body: ValueListenableBuilder(
-        valueListenable: _cardModelRepository.listenable(),
+        valueListenable: _cardRepository.listenable(),
         builder: (context, Box box, widget) {
           if (box.isEmpty) {
             return const Center(
@@ -77,22 +78,22 @@ class _HomeViewState extends State<HomeView> {
               itemCount: box.length,
               itemBuilder: (context, index) {
                 var currentBox = box;
-                var cardModel = currentBox.getAt(index)!;
+                var cardEntity = currentBox.getAt(index)!;
                 return Container(
                   color: (index % 2 == 0) ? Colors.white : Colors.blue[100],
                   child: InkWell(
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => MergeView(
-                          cardModel: cardModel,
+                          cardEntity: cardEntity,
                         ),
                       ),
                     ),
                     child: ListTile(
-                      title: Text(cardModel.en),
-                      subtitle: Text("Level: ${cardModel.level}"),
+                      title: Text(cardEntity.en),
+                      subtitle: Text("Level: ${cardEntity.level}"),
                       trailing: IconButton(
-                        onPressed: () => _onRemove(cardModel),
+                        onPressed: () => _onRemove(cardEntity),
                         icon: const Icon(
                           Icons.delete,
                           color: Colors.red,
