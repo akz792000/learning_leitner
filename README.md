@@ -31,6 +31,8 @@ flutter upgrade
 flutter clean
 flutter build apk --release
 
+download file from build -> app -> outputs -> apk -> release
+
 # Bug
 On my phone (Android) Uri.https download file from internet was not working so I did the following
 1. Got to android/app/src/main/AndroidManifest.xml
