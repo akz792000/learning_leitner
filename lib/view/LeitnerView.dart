@@ -5,7 +5,6 @@ import 'package:learning_leitner/repository/CardRepository.dart';
 
 import '../util/DateTimeUtil.dart';
 import '../widget/IconButtonWidget.dart';
-import 'home/HomeView.dart';
 
 class LeitnerView extends StatefulWidget {
   const LeitnerView({Key? key}) : super(key: key);
@@ -37,7 +36,7 @@ class _LeitnerViewState extends State<LeitnerView> {
       _cardEntity = _cards.elementAt(0);
       _cardEntity.flag = null;
       _level = _cardEntity.level;
-      _changeOrder();
+      _modifyOrder();
     } else {
       _index = -1;
     }
@@ -49,10 +48,11 @@ class _LeitnerViewState extends State<LeitnerView> {
     super.dispose();
     _cardRepository.findAll().forEach((element) {
       element.orderChanged = false;
+      element.flag = null;
     });
   }
 
-  void _changeOrder() {
+  void _modifyOrder() {
     if (!_cardEntity.orderChanged) {
       _cardEntity.order++;
       _cardEntity.orderChanged = true;
@@ -82,7 +82,7 @@ class _LeitnerViewState extends State<LeitnerView> {
   void _onPageChanged(value) {
     _index = value;
     _changeValue(_index, TextDirection.rtl, 'fa');
-    _changeOrder();
+    _modifyOrder();
   }
 
   void _changePage(int level, String flag) {
@@ -186,9 +186,10 @@ class _LeitnerViewState extends State<LeitnerView> {
                                 size: 30,
                                 color: Colors.red,
                               ),
-                        onPressed: () {
-                          _changePage(CardEntity.DEFAULT_LEVEL, 'DOWN');
-                        },
+                        onPressed: _cardEntity.flag == 'DOWN'
+                            ? null
+                            : () =>
+                                _changePage(CardEntity.DEFAULT_LEVEL, 'DOWN'),
                       ),
                       IconButtonWidget(
                         _cardEntity.flag == null || _cardEntity.flag == 'DOWN'
@@ -201,9 +202,9 @@ class _LeitnerViewState extends State<LeitnerView> {
                                 size: 30,
                                 color: Colors.green,
                               ),
-                        onPressed: () {
-                          _changePage(_cardEntity.level + 1, 'UP');
-                        },
+                        onPressed: _cardEntity.flag == 'UP'
+                            ? null
+                            : () => _changePage(_cardEntity.level + 1, 'UP'),
                       ),
                     ],
                   ),
