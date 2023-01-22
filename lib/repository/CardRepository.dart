@@ -14,7 +14,7 @@ class CardRepository {
     return box.listenable();
   }
 
-  Future<int> persist(CardEntity cardEntity) async {
+  Future<int> merge(CardEntity cardEntity) async {
     var box = Hive.box(boxId);
     if (cardEntity.id == 0) {
       cardEntity.id = await box.add(cardEntity);
@@ -28,14 +28,9 @@ class CardRepository {
     await box.delete(cardEntity.id);
   }
 
-  void removeAll() async {
+  Future<void> removeAll() async {
     var box = Hive.box(boxId);
-    await box.clear();
-  }
-
-  Future<void> merge(CardEntity cardEntity) async {
-    var box = Hive.box(boxId);
-    await box.put(cardEntity.id, cardEntity);
+    await box.deleteAll(box.keys);
   }
 
   CardEntity? findById(int id) {

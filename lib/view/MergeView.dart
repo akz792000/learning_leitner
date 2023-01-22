@@ -39,7 +39,6 @@ class _MergeViewState extends State<MergeView> {
   @override
   void initState() {
     super.initState();
-    debugPrint("Home init call");
     _idController =
         TextEditingController(text: widget.cardEntity.id.toString());
     _faController = TextEditingController(text: widget.cardEntity.fa);

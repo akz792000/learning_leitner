@@ -34,7 +34,7 @@ class _LeitnerViewState extends State<LeitnerView> {
     _cards = _cardRepository.findAllBasedOnLeitner();
     if (_cards.isNotEmpty) {
       _cardEntity = _cards.elementAt(0);
-      _cardEntity.flag = null;
+      _cardEntity.levelChanged = null;
       _level = _cardEntity.level;
       _modifyOrder();
     } else {
@@ -48,7 +48,7 @@ class _LeitnerViewState extends State<LeitnerView> {
     super.dispose();
     _cardRepository.findAll().forEach((element) {
       element.orderChanged = false;
-      element.flag = null;
+      element.levelChanged = null;
     });
   }
 
@@ -70,11 +70,11 @@ class _LeitnerViewState extends State<LeitnerView> {
   }
 
   void _onVerticalDragEnd(DragEndDetails details) {
-    if (details.primaryVelocity! > 0 && _language != 'en') {
-      // UP
+    if (_language != 'en') {
+      // details.primaryVelocity! > 0 ==> UP
       _changeValue(_index, TextDirection.ltr, 'en');
-    } else if (details.primaryVelocity! < 0 && _language != 'fa') {
-      // DOWN
+    } else if (_language != 'fa') {
+      // details.primaryVelocity! < 0 ==> DOWN
       _changeValue(_index, TextDirection.rtl, 'fa');
     }
   }
@@ -85,9 +85,9 @@ class _LeitnerViewState extends State<LeitnerView> {
     _modifyOrder();
   }
 
-  void _changePage(int level, String flag) {
+  void _changePage(int level, String levelChanged) {
     _cardEntity.level = level;
-    _cardEntity.flag = flag;
+    _cardEntity.levelChanged = levelChanged;
     _cardEntity.modified = DateTimeUtil.now();
     _cardRepository.merge(_cardEntity);
     setState(() {
@@ -126,14 +126,38 @@ class _LeitnerViewState extends State<LeitnerView> {
                 ),
                 child: Column(
                   children: [
-                    Expanded(
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 16, 0, 2),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(20.0),
+                          Text(
+                            'Level: $_level',
+                            style: const TextStyle(fontSize: 30),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 4, 0, 2),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: Image.asset('assets/flags/$_language.png').image,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Center(
                               child: Text(
                                 _language == 'fa'
                                     ? _cardEntity.fa
@@ -149,67 +173,52 @@ class _LeitnerViewState extends State<LeitnerView> {
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text(
-                          'Level: $_level',
-                          style: const TextStyle(fontSize: 30),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(28.0),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      IconButtonWidget(
-                        _cardEntity.flag == null || _cardEntity.flag == 'UP'
-                            ? const Icon(
+                    Padding(
+                      padding: const EdgeInsets.all(28.0),
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            IconButtonWidget(
+                              _cardEntity.levelChanged == null || _cardEntity.levelChanged == 'UP'
+                                  ? const Icon(
                                 Icons.thumb_down_outlined,
                                 size: 30,
                               )
-                            : const Icon(
+                                  : const Icon(
                                 Icons.thumb_down,
                                 size: 30,
                                 color: Colors.red,
                               ),
-                        onPressed: _cardEntity.flag == 'DOWN'
-                            ? null
-                            : () =>
-                                _changePage(CardEntity.DEFAULT_LEVEL, 'DOWN'),
-                      ),
-                      IconButtonWidget(
-                        _cardEntity.flag == null || _cardEntity.flag == 'DOWN'
-                            ? const Icon(
+                              onPressed: _cardEntity.levelChanged == 'DOWN'
+                                  ? null
+                                  : () =>
+                                  _changePage(CardEntity.DEFAULT_LEVEL, 'DOWN'),
+                            ),
+                            IconButtonWidget(
+                              _cardEntity.levelChanged == null || _cardEntity.levelChanged == 'DOWN'
+                                  ? const Icon(
                                 Icons.thumb_up_alt_outlined,
                                 size: 30,
                               )
-                            : const Icon(
+                                  : const Icon(
                                 Icons.thumb_up_alt,
                                 size: 30,
                                 color: Colors.green,
                               ),
-                        onPressed: _cardEntity.flag == 'UP'
-                            ? null
-                            : () => _changePage(_cardEntity.level + 1, 'UP'),
+                              onPressed: _cardEntity.levelChanged == 'UP'
+                                  ? null
+                                  : () => _changePage(_cardEntity.level + 1, 'UP'),
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
+                    )
+                  ],
                 ),
-              )
+              ),
+
             ]);
           },
           scrollDirection: Axis.horizontal,

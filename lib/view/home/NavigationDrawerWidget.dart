@@ -4,7 +4,9 @@ import 'HomeView.dart';
 import 'package:learning_leitner/view/LeitnerView.dart';
 
 class NavigationDrawerWidget extends StatelessWidget {
-  const NavigationDrawerWidget({super.key});
+  const NavigationDrawerWidget({super.key, required this.onCallback});
+
+  final Function onCallback;
 
   @override
   Widget build(BuildContext context) => Drawer(
@@ -65,14 +67,15 @@ class NavigationDrawerWidget extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.download),
               title: const Text("Download"),
-              onTap: () {
+              onTap: () async {
                 // remove Navigation Drawer
                 Navigator.pop(context);
-                Navigator.of(context).push(
+                await Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => const DownloadView(),
                   ),
                 );
+                onCallback();
               },
             ),
             const Divider(

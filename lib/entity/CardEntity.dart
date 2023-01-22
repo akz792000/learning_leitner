@@ -24,17 +24,17 @@ class CardEntity {
   @HiveField(4)
   tz.TZDateTime created;
 
-  @HiveField(4)
+  @HiveField(5)
   tz.TZDateTime modified;
 
-  @HiveField(5)
+  @HiveField(6)
   int order;
 
   // generated
-  bool orderChanged = false;
+  String? levelChanged;
 
   // generated
-  String? flag;
+  bool orderChanged = false;
 
   CardEntity({
     required this.id,

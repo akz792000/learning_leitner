@@ -22,11 +22,11 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
-    debugPrint("Home init state");
-    _setCount();
+    _initialize();
   }
 
-  void _setCount() {
+  void _initialize() {
+    debugPrint("Home initialize");
     setState(() {
       _count = _cardRepository.findAll().length;
     });
@@ -39,7 +39,7 @@ class _HomeViewState extends State<HomeView> {
       cardEntity.en,
       () {
         _cardRepository.remove(cardEntity);
-        _setCount();
+        _initialize();
       },
     );
   }
@@ -51,9 +51,7 @@ class _HomeViewState extends State<HomeView> {
       "Do you want to delete all items?",
       () {
         _cardRepository.removeAll();
-        setState(() {
-          _count = 0;
-        });
+        _initialize();
       },
     );
   }
@@ -65,7 +63,7 @@ class _HomeViewState extends State<HomeView> {
       appBar: AppBar(
         title: Text("Card: $_count"),
       ),
-      drawer: const NavigationDrawerWidget(),
+      drawer: NavigationDrawerWidget(onCallback: () => _initialize()),
       body: ValueListenableBuilder(
         valueListenable: _cardRepository.listenable(),
         builder: (context, Box box, widget) {

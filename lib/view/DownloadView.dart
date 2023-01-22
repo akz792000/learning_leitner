@@ -22,6 +22,30 @@ class _DownloadViewState extends State<DownloadView> {
   bool _toggle = false;
   int _selectedIndex = 0;
 
+  Future<int> persist(Map element) {
+    var cardEntity = CardEntity(
+        id: element["id"],
+        fa: element["fa"],
+        en: element["en"],
+        level: 1,
+        created: DateTimeUtil.now(),
+        modified: DateTimeUtil.now(),
+        order: 0);
+    return _cardRepository.merge(cardEntity);
+  }
+
+  Future<int> merge(Map element, CardEntity cardEntity) {
+    var newCardEntity = CardEntity(
+        id: cardEntity.id,
+        fa: element["fa"],
+        en: element["en"],
+        level: 1,
+        created: cardEntity.created,
+        modified: DateTimeUtil.now(),
+        order: cardEntity.order);
+    return _cardRepository.merge(newCardEntity);
+  }
+
   Future<void> _download(Map<String, dynamic> item) async {
     var url = Uri.https('raw.githubusercontent.com',
         '/akz792000/Dictionary/main/${item['name']}.json', {'q': '{https}'});
@@ -30,36 +54,15 @@ class _DownloadViewState extends State<DownloadView> {
       var extractedData =
           List<Map<String, dynamic>>.from(convert.jsonDecode(response.body));
       for (var element in extractedData) {
-        if (item["toggle"]) {
-          var cardEntity = CardEntity(
-              id: element["id"],
-              fa: element["fa"],
-              en: element["en"],
-              level: 1,
-              created: DateTimeUtil.now(),
-              modified: DateTimeUtil.now(),
-              order: 0);
-          _cardRepository.persist(cardEntity);
+        CardEntity? cardEntity = _cardRepository.findById(element["id"]);
+        if (cardEntity == null || item["toggle"]) {
+          persist(element);
         } else {
-          CardEntity? cardEntity = _cardRepository.findById(element["id"]);
-          if (cardEntity == null ||
-              cardEntity.fa != element["fa"] ||
-              cardEntity.en != element["en"]) {
-            cardEntity = CardEntity(
-              id: element["id"],
-              fa: element["fa"],
-              en: element["en"],
-              level: 1,
-              created: DateTimeUtil.now(),
-              modified: DateTimeUtil.now(),
-              order: element["order"],
-            );
-            _cardRepository.persist(cardEntity);
-          }
+          merge(element, cardEntity);
         }
       }
     } else {
-      print('Request failed with status: ${response.statusCode}.');
+      debugPrint('Request failed with status: ${response.statusCode}.');
     }
   }
 

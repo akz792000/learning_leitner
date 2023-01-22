@@ -36,7 +36,7 @@ class _PersistViewState extends State<PersistView> {
         modified: DateTimeUtil.now(),
         order: 0
       );
-      _cardRepository.persist(cardEntity);
+      _cardRepository.merge(cardEntity);
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => const HomeView(),
