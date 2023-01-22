@@ -39,7 +39,7 @@ class _DownloadViewState extends State<DownloadView> {
         id: cardEntity.id,
         fa: element["fa"],
         en: element["en"],
-        level: 1,
+        level: cardEntity.level,
         created: cardEntity.created,
         modified: DateTimeUtil.now(),
         order: cardEntity.order);
@@ -55,7 +55,10 @@ class _DownloadViewState extends State<DownloadView> {
           List<Map<String, dynamic>>.from(convert.jsonDecode(response.body));
       for (var element in extractedData) {
         CardEntity? cardEntity = _cardRepository.findById(element["id"]);
-        if (cardEntity == null || item["toggle"]) {
+        if (cardEntity == null ||
+            item["toggle"] ||
+            cardEntity.fa != element["fa"] ||
+            cardEntity.en != element["en"]) {
           persist(element);
         } else {
           merge(element, cardEntity);
