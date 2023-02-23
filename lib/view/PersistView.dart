@@ -16,7 +16,7 @@ class _PersistViewState extends State<PersistView> {
   final _cardRepository = CardRepository();
   final _faController = TextEditingController();
   final _enController = TextEditingController();
-  final _personFormKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   String? _fieldValidator(String? value) {
     if (value == null || value.isEmpty) {
@@ -26,7 +26,7 @@ class _PersistViewState extends State<PersistView> {
   }
 
   void _onPersist() async {
-    if (_personFormKey.currentState!.validate()) {
+    if (_formKey.currentState!.validate()) {
       var cardEntity = CardEntity(
         id: 0,
         fa: _faController.text,
@@ -55,7 +55,7 @@ class _PersistViewState extends State<PersistView> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _personFormKey,
+          key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../DownloadView.dart';
-import 'HomeView.dart';
 import 'package:learning_leitner/view/LeitnerView.dart';
 
 class NavigationDrawerWidget extends StatelessWidget {
@@ -21,7 +20,8 @@ class NavigationDrawerWidget extends StatelessWidget {
   Widget buildHeader(BuildContext context) => Material(
         color: Colors.blue.shade400,
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+          },
           child: Container(
             alignment: Alignment.topCenter,
             padding: EdgeInsets.only(
@@ -89,7 +89,7 @@ class NavigationDrawerWidget extends StatelessWidget {
                   context: context,
                   applicationIcon: const FlutterLogo(),
                   applicationName: "Learning Leitner",
-                  applicationVersion: '0.0.1',
+                  applicationVersion: '0.0.2',
                   applicationLegalese: 'Developed by Ali Karimizandi',
                 );
               },

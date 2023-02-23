@@ -19,7 +19,7 @@ class MergeView extends StatefulWidget {
 
 class _MergeViewState extends State<MergeView> {
   final _cardRepository = CardRepository();
-  final _personFormKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   late final TextEditingController _idController;
   late final TextEditingController _faController;
@@ -52,7 +52,7 @@ class _MergeViewState extends State<MergeView> {
   }
 
   _onMerge() {
-    if (_personFormKey.currentState!.validate()) {
+    if (_formKey.currentState!.validate()) {
       var cardEntity = CardEntity(
         id: int.parse(_idController.text),
         fa: _faController.text,
@@ -77,7 +77,7 @@ class _MergeViewState extends State<MergeView> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _personFormKey,
+          key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
