@@ -4,9 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:learning_leitner/repository/CardRepository.dart';
+import 'package:learning_leitner/view/HomePage.dart';
 
 import 'entity/CardEntity.dart';
-import 'view/home/HomeView.dart';
+import 'view/HomeView.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:sizer/sizer.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -57,7 +58,7 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: Colors.lightBlue,
         ),
         debugShowCheckedModeBanner: false,
-        home: const HomeView(),
+        home: HomePage(),
       );
     });
   }

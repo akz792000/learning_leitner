@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import '../DownloadView.dart';
+import 'DownloadView.dart';
 import 'package:learning_leitner/view/LeitnerView.dart';
 
 class NavigationDrawerWidget extends StatelessWidget {
-  const NavigationDrawerWidget({super.key, required this.onCallback});
+  const NavigationDrawerWidget({
+    super.key,
+    required this.onCallback
+  });
 
   final Function onCallback;
 

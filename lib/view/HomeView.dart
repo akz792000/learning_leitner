@@ -4,9 +4,9 @@ import 'package:learning_leitner/view/MergeView.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:learning_leitner/view/PersistView.dart';
 import 'package:learning_leitner/repository/CardRepository.dart';
-import '../../entity/CardEntity.dart';
-import '../../util/DialogUtil.dart';
-import 'NavigationDrawerWidget.dart';
+import '../entity/CardEntity.dart';
+import '../util/DialogUtil.dart';
+import 'DrawerWidget.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});

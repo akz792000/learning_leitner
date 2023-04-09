@@ -144,7 +144,9 @@ class _LeitnerViewState extends State<LeitnerView> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           CircleAvatar(
-                            backgroundImage: Image.asset('assets/flags/$_language.png').image,
+                            backgroundImage:
+                                Image.asset('assets/flags/$_language.png')
+                                    .image,
                           ),
                         ],
                       ),
@@ -181,35 +183,38 @@ class _LeitnerViewState extends State<LeitnerView> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             IconButtonWidget(
-                              _cardEntity.levelChanged == null || _cardEntity.levelChanged == 'UP'
+                              _cardEntity.levelChanged == null ||
+                                      _cardEntity.levelChanged == 'UP'
                                   ? const Icon(
-                                Icons.thumb_down_outlined,
-                                size: 30,
-                              )
+                                      Icons.thumb_down_outlined,
+                                      size: 30,
+                                    )
                                   : const Icon(
-                                Icons.thumb_down,
-                                size: 30,
-                                color: Colors.red,
-                              ),
+                                      Icons.thumb_down,
+                                      size: 30,
+                                      color: Colors.red,
+                                    ),
                               onPressed: _cardEntity.levelChanged == 'DOWN'
                                   ? null
-                                  : () =>
-                                  _changePage(CardEntity.DEFAULT_LEVEL, 'DOWN'),
+                                  : () => _changePage(
+                                      CardEntity.DEFAULT_LEVEL, 'DOWN'),
                             ),
                             IconButtonWidget(
-                              _cardEntity.levelChanged == null || _cardEntity.levelChanged == 'DOWN'
+                              _cardEntity.levelChanged == null ||
+                                      _cardEntity.levelChanged == 'DOWN'
                                   ? const Icon(
-                                Icons.thumb_up_alt_outlined,
-                                size: 30,
-                              )
+                                      Icons.thumb_up_alt_outlined,
+                                      size: 30,
+                                    )
                                   : const Icon(
-                                Icons.thumb_up_alt,
-                                size: 30,
-                                color: Colors.green,
-                              ),
+                                      Icons.thumb_up_alt,
+                                      size: 30,
+                                      color: Colors.green,
+                                    ),
                               onPressed: _cardEntity.levelChanged == 'UP'
                                   ? null
-                                  : () => _changePage(_cardEntity.level + 1, 'UP'),
+                                  : () =>
+                                      _changePage(_cardEntity.level + 1, 'UP'),
                             ),
                           ],
                         ),
@@ -218,7 +223,6 @@ class _LeitnerViewState extends State<LeitnerView> {
                   ],
                 ),
               ),
-
             ]);
           },
           scrollDirection: Axis.horizontal,
