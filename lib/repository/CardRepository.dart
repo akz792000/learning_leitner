@@ -5,6 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:learning_leitner/util/DateTimeUtil.dart';
 
 import '../entity/CardEntity.dart';
+import '../util/ListUtil.dart';
 
 class CardRepository {
   static const boxId = "card";
@@ -74,8 +75,7 @@ class CardRepository {
     }
 
     // descending sort based on the group level
-    var sortedKeys = groupLevel.keys.toList()
-      ..sort((e1, e2) => e2.compareTo(e1));
+    var sortedKeys = ListUtil.sortAsc(groupLevel.keys.toList());
 
     // prepare result
     var result = [];
@@ -88,6 +88,27 @@ class CardRepository {
           });
         result.addAll(orders);
       }
+    }
+    return result;
+  }
+
+  Map<int, int> findAllBasedOnLevel() {
+    var box = Hive.box(boxId);
+
+    // categorize based on the group level
+    Map<int, int> groupLevel = {};
+    for (var element in box.values) {
+      var val = groupLevel[element.level] ?? 0;
+      groupLevel[element.level] = val + 1;
+    }
+
+    // descending sort based on the group level
+    var sortedKeys = ListUtil.sortDesc(groupLevel.keys.toList());
+
+    // prepare result
+    Map<int, int> result = {};
+    for (var key in sortedKeys) {
+      result[key] = groupLevel[key]!;
     }
     return result;
   }

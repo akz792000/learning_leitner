@@ -3,7 +3,7 @@ import 'package:learning_leitner/entity/CardEntity.dart';
 import 'package:learning_leitner/util/DateTimeUtil.dart';
 
 import '../repository/CardRepository.dart';
-import 'HomeView.dart';
+import 'LevelView.dart';
 
 class PersistView extends StatefulWidget {
   const PersistView({Key? key}) : super(key: key);
@@ -39,7 +39,7 @@ class _PersistViewState extends State<PersistView> {
       _cardRepository.merge(cardEntity);
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => const HomeView(),
+          builder: (context) => const LevelView(),
         ),
       );
     }

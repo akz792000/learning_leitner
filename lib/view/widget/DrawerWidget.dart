@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
-import 'DownloadView.dart';
-import 'package:learning_leitner/view/LeitnerView.dart';
 
-class NavigationDrawerWidget extends StatelessWidget {
-  const NavigationDrawerWidget({
-    super.key,
-    required this.onCallback
-  });
-
-  final Function onCallback;
+class DrawerWidget extends StatelessWidget {
+  const DrawerWidget({super.key});
 
   @override
   Widget build(BuildContext context) => Drawer(
@@ -23,8 +16,7 @@ class NavigationDrawerWidget extends StatelessWidget {
   Widget buildHeader(BuildContext context) => Material(
         color: Colors.blue.shade400,
         child: InkWell(
-          onTap: () {
-          },
+          onTap: () {},
           child: Container(
             alignment: Alignment.topCenter,
             padding: EdgeInsets.only(
@@ -55,36 +47,6 @@ class NavigationDrawerWidget extends StatelessWidget {
           runSpacing: 16,
           children: [
             ListTile(
-              leading: const Icon(Icons.account_tree_outlined),
-              title: const Text("Learning"),
-              onTap: () {
-                // remove Navigation Drawer
-                Navigator.pop(context);
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const LeitnerView(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.download),
-              title: const Text("Download"),
-              onTap: () async {
-                // remove Navigation Drawer
-                Navigator.pop(context);
-                await Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const DownloadView(),
-                  ),
-                );
-                onCallback();
-              },
-            ),
-            const Divider(
-              color: Colors.black54,
-            ),
-            ListTile(
               leading: const Icon(Icons.notifications_outlined),
               title: const Text("About"),
               onTap: () {
@@ -95,6 +57,16 @@ class NavigationDrawerWidget extends StatelessWidget {
                   applicationVersion: '0.0.2',
                   applicationLegalese: 'Developed by Ali Karimizandi',
                 );
+              },
+            ),
+            const Divider(
+              color: Colors.black54,
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text("Logout"),
+              onTap: () {
+                debugPrint("Not implemented yet.");
               },
             ),
           ],

@@ -4,10 +4,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:learning_leitner/repository/CardRepository.dart';
-import 'package:learning_leitner/view/HomePage.dart';
+import 'package:learning_leitner/service/RouteService.dart';
 
+import 'config/DependencyConfig.dart';
+import 'config/RouteConfig.dart';
 import 'entity/CardEntity.dart';
-import 'view/HomeView.dart';
+import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:sizer/sizer.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -35,6 +37,9 @@ Future<void> setup() async {
   // get the directory where the hive save data
   Directory directory = await path_provider.getApplicationDocumentsDirectory();
   debugPrint(directory.path);
+
+  // Register dependency config
+  await DependencyConfig.registerDependencies();
 }
 
 class MyApp extends StatefulWidget {
@@ -58,7 +63,9 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: Colors.lightBlue,
         ),
         debugShowCheckedModeBanner: false,
-        home: HomePage(),
+        //home: const HomeView(),
+        navigatorKey: Get.find<RouteService>().navigatorKey,
+        onGenerateRoute: (settings) => RouteConfig().generateRoute(settings),
       );
     });
   }

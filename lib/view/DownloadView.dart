@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:learning_leitner/entity/CardEntity.dart';
+import '../config/RouteConfig.dart';
 import '../repository/CardRepository.dart';
+import '../service/RouteService.dart';
 import 'LoadingView.dart';
 import 'package:learning_leitner/util/DateTimeUtil.dart';
 
@@ -70,14 +73,15 @@ class _DownloadViewState extends State<DownloadView> {
   }
 
   Future<void> _downloadAll() async {
+    var routeService = Get.find<RouteService>();
     try {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const LoadingView()));
+      routeService.pushNamed(RouteConfig.loading);
       for (var item in _items) {
         await _download(item);
       }
     } finally {
-      Navigator.of(context).pop();
+      debugPrint("Download is ended.");
+      routeService.pop();
     }
   }
 
@@ -108,7 +112,7 @@ class _DownloadViewState extends State<DownloadView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Download files'),
+        title: const Text('Download'),
       ),
       body: ListView.builder(
         itemCount: _items.length,

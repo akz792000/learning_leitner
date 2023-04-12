@@ -44,7 +44,6 @@ class _LeitnerViewState extends State<LeitnerView> {
 
   @override
   void dispose() {
-    debugPrint("Leitner dispose");
     super.dispose();
     _cardRepository.findAll().forEach((element) {
       element.orderChanged = false;

@@ -1,62 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:learning_leitner/model/OptionModel.dart';
+import 'package:learning_leitner/repository/CardRepository.dart';
 
 import '../config/RouteConfig.dart';
-import '../model/OptionModel.dart';
 import '../service/RouteService.dart';
-import 'widget/DrawerWidget.dart';
 
-class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+class LevelView extends StatefulWidget {
+  const LevelView({super.key});
 
   @override
-  createState() => _HomeViewState();
+  createState() => _LevelViewState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class _LevelViewState extends State<LevelView> {
+  final _cardRepository = CardRepository();
+  late int _count;
   int _selectedOption = 0;
-  final _optionModels = [
-    OptionModel(
-      image: Image.asset('assets/flags/en.png'),
-      title: 'English',
-      subtitle: 'Learn english sentences.',
-      onTap: () async =>
-          await Get.find<RouteService>().pushNamed(RouteConfig.level),
-    ),
-    OptionModel(
-      image: Image.asset('assets/flags/de.png'),
-      title: 'Deutsch',
-      subtitle: 'Englische Sätze lernen.',
-      onTap: () => debugPrint('Not work yet'),
-    ),
-    OptionModel(
-      image: Image.asset('assets/database.png'),
-      title: 'Data',
-      subtitle: 'Write down your sentences.',
-      onTap: () async =>
-          await Get.find<RouteService>().pushNamed(RouteConfig.data),
-    ),
-  ];
+  final List<OptionModel> _optionModels = [];
+
+  void initialize() {
+    setState(() {
+      _count = _cardRepository.findAll().length;
+      _cardRepository.findAllBasedOnLevel().forEach((key, value) {
+        _optionModels.add(OptionModel(
+          image: Image.asset('assets/levels/$key.png'),
+          title: "Level $key",
+          subtitle: "Items: $value",
+        ));
+      });
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    debugPrint("HomeView initialize");
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    debugPrint("HomeView dispose");
+    initialize();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Home"),
+        title: Text("Card: $_count"),
       ),
-      drawer: const DrawerWidget(),
       body: ListView.builder(
         itemCount: _optionModels.length + 2,
         itemBuilder: (BuildContext context, int index) {
@@ -98,12 +85,32 @@ class _HomeViewState extends State<HomeView> {
               onTap: () {
                 setState(() {
                   _selectedOption = index - 1;
-                  _optionModels[_selectedOption].onTap!();
                 });
               },
             ),
           );
         },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        heroTag: 'Play',
+        onPressed: () async => await Get.find<RouteService>()
+            .pushReplacementNamed(RouteConfig.leitner)
+            .then((value) => Get.find<RouteService>()
+                .pushNamed(RouteConfig.level)),
+        child: const Icon(Icons.play_arrow),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 8.0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: const [
+            Padding(
+              padding: EdgeInsets.all(8),
+            ),
+          ],
+        ),
       ),
     );
   }
