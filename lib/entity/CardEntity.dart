@@ -7,7 +7,9 @@ part 'CardEntity.g.dart';
 
 @HiveType(typeId: 1)
 class CardEntity {
-  static const int DEFAULT_LEVEL = 1;
+  static const int newbieLevel = 0;
+  static const int initLevel = 1;
+  static const int initSubLevel = 1;
 
   @HiveField(0)
   int id;
@@ -22,13 +24,16 @@ class CardEntity {
   int level;
 
   @HiveField(4)
-  tz.TZDateTime created;
+  int subLevel;
 
   @HiveField(5)
-  tz.TZDateTime modified;
+  int order;
 
   @HiveField(6)
-  int order;
+  tz.TZDateTime created;
+
+  @HiveField(7)
+  tz.TZDateTime modified;
 
   // generated
   String? levelChanged;
@@ -41,8 +46,9 @@ class CardEntity {
     required this.fa,
     required this.en,
     required this.level,
+    required this.subLevel,
+    required this.order,
     required this.created,
     required this.modified,
-    required this.order,
   });
 }

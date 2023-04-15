@@ -31,10 +31,11 @@ class _PersistViewState extends State<PersistView> {
         id: 0,
         fa: _faController.text,
         en: _enController.text,
-        level: CardEntity.DEFAULT_LEVEL,
+        level: CardEntity.newbieLevel,
+        subLevel: CardEntity.initSubLevel,
+        order: 0,
         created: DateTimeUtil.now(),
         modified: DateTimeUtil.now(),
-        order: 0
       );
       _cardRepository.merge(cardEntity);
       Navigator.of(context).pushReplacement(

@@ -86,6 +86,7 @@ class _LeitnerViewState extends State<LeitnerView> {
 
   void _changePage(int level, String levelChanged) {
     _cardEntity.level = level;
+    _cardEntity.subLevel = CardEntity.initSubLevel;
     _cardEntity.levelChanged = levelChanged;
     _cardEntity.modified = DateTimeUtil.now();
     _cardRepository.merge(_cardEntity);
@@ -196,7 +197,9 @@ class _LeitnerViewState extends State<LeitnerView> {
                               onPressed: _cardEntity.levelChanged == 'DOWN'
                                   ? null
                                   : () => _changePage(
-                                      CardEntity.DEFAULT_LEVEL, 'DOWN'),
+                                        CardEntity.initLevel,
+                                        'DOWN',
+                                      ),
                             ),
                             IconButtonWidget(
                               _cardEntity.levelChanged == null ||
@@ -212,8 +215,10 @@ class _LeitnerViewState extends State<LeitnerView> {
                                     ),
                               onPressed: _cardEntity.levelChanged == 'UP'
                                   ? null
-                                  : () =>
-                                      _changePage(_cardEntity.level + 1, 'UP'),
+                                  : () => _changePage(
+                                        _cardEntity.level + 1,
+                                        'UP',
+                                      ),
                             ),
                           ],
                         ),

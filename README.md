@@ -71,3 +71,6 @@ or
 1. URL: https://flagdownload.com
 2. Flat rounded
 3. 256px
+
+## For icon download
+https://www.flaticon.com/

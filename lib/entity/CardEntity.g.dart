@@ -17,38 +17,72 @@ class CardEntityAdapter extends TypeAdapter<CardEntity> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return CardEntity(
+      // id
       id: fields[0] as int,
+
+      // fa
       fa: fields[1] as String,
+
+      // en
       en: fields[2] as String,
+
+      // level
       level: fields[3] != null ? fields[3] as int : 0,
-      created: fields[4] != null
-          ? tz.TZDateTime.from(fields[4], tz.local)
+
+      // subLevel
+      subLevel: fields[4] != null ? fields[4] as int : 0,
+
+      // order
+      order: fields[5] != null ? fields[5] as int : 0,
+
+      // created
+      created: fields[6] != null
+          ? tz.TZDateTime.from(fields[6], tz.local)
           : tz.TZDateTime.now(tz.local),
-      modified: fields[5] != null
-          ? tz.TZDateTime.from(fields[5], tz.local)
+
+      // modified
+      modified: fields[7] != null
+          ? tz.TZDateTime.from(fields[7], tz.local)
           : tz.TZDateTime.now(tz.local),
-      order: fields[6] != null ? fields[6] as int : 0,
     );
   }
 
   @override
   void write(BinaryWriter writer, CardEntity obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
+
+      // id
       ..writeByte(0)
       ..write(obj.id)
+
+      // fa
       ..writeByte(1)
       ..write(obj.fa)
+
+      // en
       ..writeByte(2)
       ..write(obj.en)
+
+      // level
       ..writeByte(3)
       ..write(obj.level)
+
+      // subLevel
       ..writeByte(4)
-      ..write(obj.created)
+      ..write(obj.subLevel)
+
+      // order
       ..writeByte(5)
-      ..write(obj.modified)
+      ..write(obj.order)
+
+      // created
       ..writeByte(6)
-      ..write(obj.order);
+      ..write(obj.created)
+
+      // modified
+      ..writeByte(7)
+      ..write(obj.modified);
   }
 
   @override

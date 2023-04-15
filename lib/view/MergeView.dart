@@ -25,9 +25,10 @@ class _MergeViewState extends State<MergeView> {
   late final TextEditingController _faController;
   late final TextEditingController _enController;
   late final TextEditingController _levelController;
+  late final TextEditingController _subLevelController;
+  late final TextEditingController _orderController;
   late final tz.TZDateTime _created;
   late final tz.TZDateTime _modified;
-  late final TextEditingController _orderController;
 
   String? _fieldValidator(String? value) {
     if (value == null || value.isEmpty) {
@@ -45,10 +46,12 @@ class _MergeViewState extends State<MergeView> {
     _enController = TextEditingController(text: widget.cardEntity.en);
     _levelController =
         TextEditingController(text: widget.cardEntity.level.toString());
-    _created = widget.cardEntity.created;
-    _modified = widget.cardEntity.modified;
+    _subLevelController =
+        TextEditingController(text: widget.cardEntity.subLevel.toString());
     _orderController =
         TextEditingController(text: widget.cardEntity.order.toString());
+    _created = widget.cardEntity.created;
+    _modified = widget.cardEntity.modified;
   }
 
   _onMerge() {
@@ -57,10 +60,11 @@ class _MergeViewState extends State<MergeView> {
         id: int.parse(_idController.text),
         fa: _faController.text,
         en: _enController.text,
-        level: CardEntity.DEFAULT_LEVEL,
+        level: CardEntity.initLevel,
+        subLevel: CardEntity.initSubLevel,
+        order: int.parse(_orderController.text),
         created: _created,
         modified: DateTimeUtil.now(),
-        order: int.parse(_orderController.text),
       );
       _cardRepository.merge(cardEntity);
       Navigator.of(context).pop();
@@ -101,6 +105,16 @@ class _MergeViewState extends State<MergeView> {
                   FilteringTextInputFormatter.digitsOnly
                 ],
                 controller: _levelController,
+                validator: _fieldValidator,
+              ),
+              const SizedBox(height: 24.0),
+              const Text('SubLevel'),
+              TextFormField(
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ],
+                controller: _subLevelController,
                 validator: _fieldValidator,
               ),
               const SizedBox(height: 24.0),

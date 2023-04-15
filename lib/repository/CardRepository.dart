@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:learning_leitner/util/DateTimeUtil.dart';
+import 'package:timezone/standalone.dart';
 
 import '../entity/CardEntity.dart';
 import '../util/ListUtil.dart';
@@ -57,38 +58,36 @@ class CardRepository {
   List findAllBasedOnLeitner() {
     var box = Hive.box(boxId);
 
-    // categorize based on the group level
+    // group based on group level
     Map<int, dynamic> groupLevel = {};
     for (var element in box.values) {
-      if (groupLevel[element.level] == null) {
-        groupLevel[element.level] = {
-          "dates": {},
-          "items": [],
-        };
-      }
-      if (element.level == 1 ||
-          DateTimeUtil.daysBetween(element.modified) >= 1) {
-        var date = DateTimeUtil.format('yyyy-MM-dd', element.modified);
-        groupLevel[element.level]['dates'][date] = date;
-        groupLevel[element.level]['items'].add(element);
-      }
+      groupLevel[element.level] = groupLevel[element.level] ?? [];
+      groupLevel[element.level].add(element);
     }
 
     // descending sort based on the group level
     var sortedKeys = ListUtil.sortAsc(groupLevel.keys.toList());
 
-    // prepare result
+    // items should be read
     var result = [];
     for (var key in sortedKeys) {
-      var item = groupLevel[key];
-      if (item['dates'].length >= pow(2, key - 1)) {
-        var orders = item['items']
-          ..sort((e1, e2) {
-            return Comparable.compare(e1.order, e2.order);
-          });
-        result.addAll(orders);
+      var items = groupLevel[key];
+      if (key == CardEntity.newbieLevel) {
+        result.addAll(items);
+      } else {
+        var maxSubLevelCount = pow(2, key - 1);
+        for (var item in items) {
+          if (item.subLevel == maxSubLevelCount) {
+            result.add(item);
+          } else {
+            if (item.subLevel < maxSubLevelCount && DateTimeUtil.daysBetween(item.modified) >= 1) {
+              item.subLevel++;
+            }
+          }
+        }
       }
     }
+
     return result;
   }
 
