@@ -97,6 +97,60 @@ class _LeitnerViewState extends State<LeitnerView> {
         duration: const Duration(milliseconds: 300), curve: Curves.linear);
   }
 
+  List<Widget> _bottomBar() {
+    var result = [
+      IconButtonWidget(
+        _cardEntity.levelChanged == null ||
+            _cardEntity.levelChanged == 'UP'
+            ? const Icon(
+          Icons.thumb_down_outlined,
+          size: 30,
+        )
+            : const Icon(
+          Icons.thumb_down,
+          size: 30,
+          color: Colors.red,
+        ),
+        onPressed: _cardEntity.levelChanged == 'DOWN'
+            ? null
+            : () => _changePage(
+          CardEntity.initLevel,
+          'DOWN',
+        ),
+      ),
+      IconButtonWidget(
+       const Icon(
+          Icons.light_mode_outlined,
+          size: 30,
+        ),
+        onPressed: () {},
+      ),
+      IconButtonWidget(
+        _cardEntity.levelChanged == null ||
+            _cardEntity.levelChanged == 'DOWN'
+            ? const Icon(
+          Icons.thumb_up_alt_outlined,
+          size: 30,
+        )
+            : const Icon(
+          Icons.thumb_up_alt,
+          size: 30,
+          color: Colors.green,
+        ),
+        onPressed: _cardEntity.levelChanged == 'UP'
+            ? null
+            : () => _changePage(
+          _cardEntity.level + 1,
+          'UP',
+        ),
+      ),
+    ];
+    if (_cardEntity.desc == "") {
+      result.removeAt(1);
+    }
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -181,46 +235,7 @@ class _LeitnerViewState extends State<LeitnerView> {
                         alignment: Alignment.bottomCenter,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            IconButtonWidget(
-                              _cardEntity.levelChanged == null ||
-                                      _cardEntity.levelChanged == 'UP'
-                                  ? const Icon(
-                                      Icons.thumb_down_outlined,
-                                      size: 30,
-                                    )
-                                  : const Icon(
-                                      Icons.thumb_down,
-                                      size: 30,
-                                      color: Colors.red,
-                                    ),
-                              onPressed: _cardEntity.levelChanged == 'DOWN'
-                                  ? null
-                                  : () => _changePage(
-                                        CardEntity.initLevel,
-                                        'DOWN',
-                                      ),
-                            ),
-                            IconButtonWidget(
-                              _cardEntity.levelChanged == null ||
-                                      _cardEntity.levelChanged == 'DOWN'
-                                  ? const Icon(
-                                      Icons.thumb_up_alt_outlined,
-                                      size: 30,
-                                    )
-                                  : const Icon(
-                                      Icons.thumb_up_alt,
-                                      size: 30,
-                                      color: Colors.green,
-                                    ),
-                              onPressed: _cardEntity.levelChanged == 'UP'
-                                  ? null
-                                  : () => _changePage(
-                                        _cardEntity.level + 1,
-                                        'UP',
-                                      ),
-                            ),
-                          ],
+                          children: _bottomBar(),
                         ),
                       ),
                     )
