@@ -4,6 +4,7 @@ import 'package:learning_leitner/util/ColorUtil.dart';
 import 'package:learning_leitner/repository/CardRepository.dart';
 
 import '../util/DateTimeUtil.dart';
+import '../util/DialogUtil.dart';
 import '../widget/IconButtonWidget.dart';
 
 class LeitnerView extends StatefulWidget {
@@ -55,7 +56,6 @@ class _LeitnerViewState extends State<LeitnerView> {
     if (!_cardEntity.orderChanged) {
       _cardEntity.order++;
       _cardEntity.orderChanged = true;
-      _cardRepository.merge(_cardEntity);
     }
   }
 
@@ -89,60 +89,71 @@ class _LeitnerViewState extends State<LeitnerView> {
     _cardEntity.subLevel = CardEntity.initSubLevel;
     _cardEntity.levelChanged = levelChanged;
     _cardEntity.modified = DateTimeUtil.now();
-    _cardRepository.merge(_cardEntity);
     setState(() {
       _level = _cardEntity.level;
     });
-    _pageController.animateToPage(_index + 1,
-        duration: const Duration(milliseconds: 300), curve: Curves.linear);
+    if (_index < _cards.length - 1) {
+      _pageController.animateToPage(_index + 1,
+          duration: const Duration(milliseconds: 300), curve: Curves.linear);
+    }
   }
 
   List<Widget> _bottomBar() {
     var result = [
+      // dislike
       IconButtonWidget(
-        _cardEntity.levelChanged == null ||
-            _cardEntity.levelChanged == 'UP'
+        _cardEntity.levelChanged == null || _cardEntity.levelChanged == 'UP'
             ? const Icon(
-          Icons.thumb_down_outlined,
-          size: 30,
-        )
+                Icons.thumb_down_outlined,
+                size: 30,
+              )
             : const Icon(
-          Icons.thumb_down,
-          size: 30,
-          color: Colors.red,
-        ),
+                Icons.thumb_down,
+                size: 30,
+                color: Colors.red,
+              ),
         onPressed: _cardEntity.levelChanged == 'DOWN'
             ? null
             : () => _changePage(
-          CardEntity.initLevel,
-          'DOWN',
-        ),
+                  CardEntity.newbieLevel,
+                  'DOWN',
+                ),
       ),
+
+      // desc
       IconButtonWidget(
-       const Icon(
+        const Icon(
           Icons.light_mode_outlined,
           size: 30,
         ),
-        onPressed: () {},
+        onPressed: () {
+          DialogUtil.ok(
+            context,
+            "Description",
+            _cardEntity.desc,
+            () => {},
+          );
+        },
       ),
+
+      // like
       IconButtonWidget(
-        _cardEntity.levelChanged == null ||
-            _cardEntity.levelChanged == 'DOWN'
+        _cardEntity.levelChanged == null || _cardEntity.levelChanged == 'DOWN'
             ? const Icon(
-          Icons.thumb_up_alt_outlined,
-          size: 30,
-        )
+                Icons.thumb_up_alt_outlined,
+                size: 30,
+              )
             : const Icon(
-          Icons.thumb_up_alt,
-          size: 30,
-          color: Colors.green,
-        ),
+                Icons.thumb_up_alt,
+                size: 30,
+                color: Colors.green,
+              ),
         onPressed: _cardEntity.levelChanged == 'UP'
             ? null
             : () => _changePage(
-          _cardEntity.level + 1,
-          'UP',
-        ),
+                  _cardEntity.level + 1,
+                  'UP',
+                ),
       ),
     ];
     if (_cardEntity.desc == "") {
@@ -153,18 +164,16 @@ class _LeitnerViewState extends State<LeitnerView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Item ${_index + 1} of ${_cards.length}'),
-        centerTitle: true,
-        leading: InkWell(
-          child: const Icon(Icons.arrow_back_ios),
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      body: GestureDetector(
+    Widget body;
+    if (_cards.isEmpty) {
+      body = DialogUtil.ok(
+        context,
+        "Alert",
+        "There is no card to study.",
+        () => {},
+      );
+    } else {
+      body = GestureDetector(
         onVerticalDragEnd: (details) {
           _onVerticalDragEnd(details);
         },
@@ -247,7 +256,20 @@ class _LeitnerViewState extends State<LeitnerView> {
           scrollDirection: Axis.horizontal,
           itemCount: _cards.length,
         ),
+      );
+    }
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Item ${_index + 1} of ${_cards.length}'),
+        centerTitle: true,
+        leading: InkWell(
+          child: const Icon(Icons.arrow_back_ios),
+          onTap: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
+      body: body,
     );
   }
 }

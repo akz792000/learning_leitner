@@ -69,11 +69,10 @@ class _LevelViewState extends State<LevelView> {
               title: Text(
                 _optionModels[index - 1].title,
                 style: TextStyle(
-                  color: _selectedOption == index - 1
-                      ? Colors.black
-                      : Colors.grey[600],
-                  fontWeight: FontWeight.bold
-                ),
+                    color: _selectedOption == index - 1
+                        ? Colors.black
+                        : Colors.grey[600],
+                    fontWeight: FontWeight.bold),
               ),
               subtitle: Text(
                 _optionModels[index - 1].subtitle,
@@ -97,8 +96,8 @@ class _LevelViewState extends State<LevelView> {
         heroTag: 'Play',
         onPressed: () async => await Get.find<RouteService>()
             .pushReplacementNamed(RouteConfig.leitner)
-            .then((value) => Get.find<RouteService>()
-                .pushNamed(RouteConfig.level)),
+            .then((value) =>
+                Get.find<RouteService>().pushNamed(RouteConfig.level)),
         child: const Icon(Icons.play_arrow),
       ),
       bottomNavigationBar: BottomAppBar(

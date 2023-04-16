@@ -120,7 +120,6 @@ class _MergeViewState extends State<MergeView> {
                     ),
                     TextFormField(
                       controller: _descController,
-                      validator: _fieldValidator,
                     ),
 
                     // level

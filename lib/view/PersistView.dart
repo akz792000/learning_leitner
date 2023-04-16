@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:learning_leitner/entity/CardEntity.dart';
 import 'package:learning_leitner/util/DateTimeUtil.dart';
 
 import '../repository/CardRepository.dart';
-import '../service/RouteService.dart';
 
 class PersistView extends StatefulWidget {
   const PersistView({Key? key}) : super(key: key);
@@ -59,6 +57,7 @@ class _PersistViewState extends State<PersistView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // fa
               const Text(
                 'Farsi',
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -68,6 +67,8 @@ class _PersistViewState extends State<PersistView> {
                 controller: _faController,
                 validator: _fieldValidator,
               ),
+
+              // en
               const SizedBox(height: 24.0),
               const Text(
                 'English',
@@ -77,6 +78,8 @@ class _PersistViewState extends State<PersistView> {
                 controller: _enController,
                 validator: _fieldValidator,
               ),
+
+              // desc
               const SizedBox(height: 24.0),
               const Text(
                 'Description',
@@ -84,8 +87,9 @@ class _PersistViewState extends State<PersistView> {
               ),
               TextFormField(
                 controller: _descController,
-                validator: _fieldValidator,
               ),
+
+              // button
               const Spacer(),
               Padding(
                 padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 24.0),
