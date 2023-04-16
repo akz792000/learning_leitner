@@ -6,7 +6,6 @@ import 'package:learning_leitner/entity/CardEntity.dart';
 import '../config/RouteConfig.dart';
 import '../repository/CardRepository.dart';
 import '../service/RouteService.dart';
-import 'LoadingView.dart';
 import 'package:learning_leitner/util/DateTimeUtil.dart';
 
 class DownloadView extends StatefulWidget {
@@ -28,13 +27,14 @@ class _DownloadViewState extends State<DownloadView> {
   Future<int> persist(Map element) {
     var cardEntity = CardEntity(
       id: element["id"],
-      fa: element["fa"],
-      en: element["en"],
+      created: DateTimeUtil.now(),
+      modified: DateTimeUtil.now(),
       level: CardEntity.newbieLevel,
       subLevel: CardEntity.initSubLevel,
       order: 0,
-      created: DateTimeUtil.now(),
-      modified: DateTimeUtil.now(),
+      fa: element["fa"],
+      en: element["en"],
+      desc: element["desc"] ?? "",
     );
     return _cardRepository.merge(cardEntity);
   }
@@ -69,7 +69,7 @@ class _DownloadViewState extends State<DownloadView> {
       }
     } finally {
       debugPrint("Download is ended.");
-      routeService.pop();
+      Navigator.pop(context);
     }
   }
 

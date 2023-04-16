@@ -72,6 +72,7 @@ class _LevelViewState extends State<LevelView> {
                   color: _selectedOption == index - 1
                       ? Colors.black
                       : Colors.grey[600],
+                  fontWeight: FontWeight.bold
                 ),
               ),
               subtitle: Text(

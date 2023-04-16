@@ -20,11 +20,15 @@ class CardEntityAdapter extends TypeAdapter<CardEntity> {
       // id
       id: fields[0] as int,
 
-      // fa
-      fa: fields[1] as String,
+      // created
+      created: fields[1] != null
+          ? tz.TZDateTime.from(fields[1], tz.local)
+          : tz.TZDateTime.now(tz.local),
 
-      // en
-      en: fields[2] as String,
+      // modified
+      modified: fields[2] != null
+          ? tz.TZDateTime.from(fields[2], tz.local)
+          : tz.TZDateTime.now(tz.local),
 
       // level
       level: fields[3] != null ? fields[3] as int : 0,
@@ -35,34 +39,33 @@ class CardEntityAdapter extends TypeAdapter<CardEntity> {
       // order
       order: fields[5] != null ? fields[5] as int : 0,
 
-      // created
-      created: fields[6] != null
-          ? tz.TZDateTime.from(fields[6], tz.local)
-          : tz.TZDateTime.now(tz.local),
+      // fa
+      fa: fields[6] as String,
 
-      // modified
-      modified: fields[7] != null
-          ? tz.TZDateTime.from(fields[7], tz.local)
-          : tz.TZDateTime.now(tz.local),
+      // en
+      en: fields[7] as String,
+
+      // desc
+      desc: fields[8] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, CardEntity obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(9)
 
       // id
       ..writeByte(0)
       ..write(obj.id)
 
-      // fa
+      // created
       ..writeByte(1)
-      ..write(obj.fa)
+      ..write(obj.created)
 
-      // en
+      // modified
       ..writeByte(2)
-      ..write(obj.en)
+      ..write(obj.modified)
 
       // level
       ..writeByte(3)
@@ -76,13 +79,17 @@ class CardEntityAdapter extends TypeAdapter<CardEntity> {
       ..writeByte(5)
       ..write(obj.order)
 
-      // created
+      // fa
       ..writeByte(6)
-      ..write(obj.created)
+      ..write(obj.fa)
 
-      // modified
+      // en
       ..writeByte(7)
-      ..write(obj.modified);
+      ..write(obj.en)
+
+      // desc
+      ..writeByte(8)
+      ..write(obj.desc);
   }
 
   @override

@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:hive/hive.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -15,10 +13,10 @@ class CardEntity {
   int id;
 
   @HiveField(1)
-  String fa;
+  tz.TZDateTime created;
 
   @HiveField(2)
-  String en;
+  tz.TZDateTime modified;
 
   @HiveField(3)
   int level;
@@ -30,10 +28,13 @@ class CardEntity {
   int order;
 
   @HiveField(6)
-  tz.TZDateTime created;
+  String fa;
 
   @HiveField(7)
-  tz.TZDateTime modified;
+  String en;
+
+  @HiveField(8)
+  String desc;
 
   // generated
   String? levelChanged;
@@ -43,12 +44,13 @@ class CardEntity {
 
   CardEntity({
     required this.id,
-    required this.fa,
-    required this.en,
+    required this.created,
+    required this.modified,
     required this.level,
     required this.subLevel,
     required this.order,
-    required this.created,
-    required this.modified,
+    required this.fa,
+    required this.en,
+    required this.desc,
   });
 }

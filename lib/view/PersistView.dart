@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:learning_leitner/entity/CardEntity.dart';
 import 'package:learning_leitner/util/DateTimeUtil.dart';
 
 import '../repository/CardRepository.dart';
-import 'LevelView.dart';
+import '../service/RouteService.dart';
 
 class PersistView extends StatefulWidget {
   const PersistView({Key? key}) : super(key: key);
@@ -16,6 +17,7 @@ class _PersistViewState extends State<PersistView> {
   final _cardRepository = CardRepository();
   final _faController = TextEditingController();
   final _enController = TextEditingController();
+  final _descController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   String? _fieldValidator(String? value) {
@@ -29,20 +31,17 @@ class _PersistViewState extends State<PersistView> {
     if (_formKey.currentState!.validate()) {
       var cardEntity = CardEntity(
         id: 0,
-        fa: _faController.text,
-        en: _enController.text,
+        created: DateTimeUtil.now(),
+        modified: DateTimeUtil.now(),
         level: CardEntity.newbieLevel,
         subLevel: CardEntity.initSubLevel,
         order: 0,
-        created: DateTimeUtil.now(),
-        modified: DateTimeUtil.now(),
+        fa: _faController.text,
+        en: _enController.text,
+        desc: _descController.text,
       );
       _cardRepository.merge(cardEntity);
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => const LevelView(),
-        ),
-      );
+      Navigator.pop(context);
     }
   }
 
@@ -51,7 +50,7 @@ class _PersistViewState extends State<PersistView> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Persist Card'),
+        title: const Text('Persist'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -60,16 +59,31 @@ class _PersistViewState extends State<PersistView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Farsi'),
+              const Text(
+                'Farsi',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               TextFormField(
                 textDirection: TextDirection.rtl,
                 controller: _faController,
                 validator: _fieldValidator,
               ),
               const SizedBox(height: 24.0),
-              const Text('English'),
+              const Text(
+                'English',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               TextFormField(
                 controller: _enController,
+                validator: _fieldValidator,
+              ),
+              const SizedBox(height: 24.0),
+              const Text(
+                'Description',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              TextFormField(
+                controller: _descController,
                 validator: _fieldValidator,
               ),
               const Spacer(),

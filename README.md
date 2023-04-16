@@ -15,6 +15,32 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
+## check the size of your partitions on mac
+diskutil list
+
+## install android sdk
+brew install --cask android-SDK
+
+## install android ndk
+brew install --cask android-ndk
+
+## install android studio
+brew install --cask android-studio
+--> Android SDK : Android Tiramisu
+--> SDK Tools: Android SDK Build-Tools
+Android SDK Command-line Tools
+Android Emulator
+Android SDK Platform-Tools
+
+## install flutter
+brew install --cask flutter
+
+## check if everything configure correctly
+flutter doctor
+
+## in case of problem with license
+flutter doctor --android-license
+
 ## Hive configuration
 add hive_generator and build_runner to the dev dependencies
 
@@ -73,4 +99,5 @@ or
 3. 256px
 
 ## For icon download
-https://www.flaticon.com/
+https://www.flaticon.com/free-icons/emoticons
+1. 256px

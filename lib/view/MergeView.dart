@@ -22,13 +22,14 @@ class _MergeViewState extends State<MergeView> {
   final _formKey = GlobalKey<FormState>();
 
   late final TextEditingController _idController;
-  late final TextEditingController _faController;
-  late final TextEditingController _enController;
-  late final TextEditingController _levelController;
-  late final TextEditingController _subLevelController;
-  late final TextEditingController _orderController;
   late final tz.TZDateTime _created;
   late final tz.TZDateTime _modified;
+  late final int _level;
+  late final int _subLevel;
+  late final TextEditingController _faController;
+  late final TextEditingController _enController;
+  late final TextEditingController _descController;
+  late final TextEditingController _orderController;
 
   String? _fieldValidator(String? value) {
     if (value == null || value.isEmpty) {
@@ -42,32 +43,32 @@ class _MergeViewState extends State<MergeView> {
     super.initState();
     _idController =
         TextEditingController(text: widget.cardEntity.id.toString());
-    _faController = TextEditingController(text: widget.cardEntity.fa);
-    _enController = TextEditingController(text: widget.cardEntity.en);
-    _levelController =
-        TextEditingController(text: widget.cardEntity.level.toString());
-    _subLevelController =
-        TextEditingController(text: widget.cardEntity.subLevel.toString());
-    _orderController =
-        TextEditingController(text: widget.cardEntity.order.toString());
     _created = widget.cardEntity.created;
     _modified = widget.cardEntity.modified;
+    _level = widget.cardEntity.level;
+    _subLevel = widget.cardEntity.subLevel;
+    _orderController =
+        TextEditingController(text: widget.cardEntity.order.toString());
+    _faController = TextEditingController(text: widget.cardEntity.fa);
+    _enController = TextEditingController(text: widget.cardEntity.en);
+    _descController = TextEditingController(text: widget.cardEntity.desc);
   }
 
   _onMerge() {
     if (_formKey.currentState!.validate()) {
       var cardEntity = CardEntity(
         id: int.parse(_idController.text),
-        fa: _faController.text,
-        en: _enController.text,
-        level: CardEntity.initLevel,
-        subLevel: CardEntity.initSubLevel,
-        order: int.parse(_orderController.text),
         created: _created,
         modified: DateTimeUtil.now(),
+        level: CardEntity.newbieLevel,
+        subLevel: CardEntity.initSubLevel,
+        order: int.parse(_orderController.text),
+        fa: _faController.text,
+        en: _enController.text,
+        desc: _descController.text,
       );
       _cardRepository.merge(cardEntity);
-      Navigator.of(context).pop();
+      Navigator.pop(context);
     }
   }
 
@@ -76,83 +77,129 @@ class _MergeViewState extends State<MergeView> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Update Card'),
+        title: const Text('Merge'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('Farsi'),
-              TextFormField(
-                textDirection: TextDirection.rtl,
-                controller: _faController,
-                validator: _fieldValidator,
-              ),
-              const SizedBox(height: 24.0),
-              const Text('English'),
-              TextFormField(
-                controller: _enController,
-                validator: _fieldValidator,
-              ),
-              const SizedBox(height: 24.0),
-              const Text('Level'),
-              TextFormField(
-                keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
-                ],
-                controller: _levelController,
-                validator: _fieldValidator,
-              ),
-              const SizedBox(height: 24.0),
-              const Text('SubLevel'),
-              TextFormField(
-                keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
-                ],
-                controller: _subLevelController,
-                validator: _fieldValidator,
-              ),
-              const SizedBox(height: 24.0),
-              const Text('Created'),
-              TextFormField(
-                initialValue: DateTimeUtil.adjustDateTime(_created),
-                readOnly: true,
-              ),
-              const SizedBox(height: 24.0),
-              const Text('Modified'),
-              TextFormField(
-                initialValue: DateTimeUtil.adjustDateTime(_modified),
-                readOnly: true,
-              ),
-              const SizedBox(height: 24.0),
-              const Text('Order'),
-              TextFormField(
-                keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
-                ],
-                controller: _orderController,
-                validator: _fieldValidator,
-              ),
-              const Spacer(),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 24.0),
-                child: SizedBox(
-                  width: double.maxFinite,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () => _onMerge(),
-                    child: const Text('Merge'),
-                  ),
+      body: Center(
+        child: ListView(
+          shrinkWrap: true,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    // fa
+                    const Text(
+                      'Farsi',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextFormField(
+                      textDirection: TextDirection.rtl,
+                      controller: _faController,
+                      validator: _fieldValidator,
+                    ),
+
+                    // en
+                    const SizedBox(height: 24.0),
+                    const Text(
+                      'English',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextFormField(
+                      controller: _enController,
+                      validator: _fieldValidator,
+                    ),
+
+                    // desc
+                    const SizedBox(height: 24.0),
+                    const Text(
+                      'Description',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextFormField(
+                      controller: _descController,
+                      validator: _fieldValidator,
+                    ),
+
+                    // level
+                    const SizedBox(height: 24.0),
+                    const Text(
+                      'Level',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextFormField(
+                      initialValue: _level.toString(),
+                      readOnly: true,
+                    ),
+
+                    // subLevel
+                    const SizedBox(height: 24.0),
+                    const Text(
+                      'SubLevel',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextFormField(
+                      initialValue: _subLevel.toString(),
+                      readOnly: true,
+                    ),
+
+                    // created
+                    const SizedBox(height: 24.0),
+                    const Text(
+                      'Created',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextFormField(
+                      initialValue: DateTimeUtil.adjustDateTime(_created),
+                      readOnly: true,
+                    ),
+
+                    // modified
+                    const SizedBox(height: 24.0),
+                    const Text(
+                      'Modified',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextFormField(
+                      initialValue: DateTimeUtil.adjustDateTime(_modified),
+                      readOnly: true,
+                    ),
+
+                    // order
+                    const SizedBox(height: 24.0),
+                    const Text(
+                      'Order',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextFormField(
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      controller: _orderController,
+                      validator: _fieldValidator,
+                    ),
+
+                    // button
+                    const SizedBox(height: 24.0),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 24.0),
+                      child: SizedBox(
+                        width: double.maxFinite,
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: () => _onMerge(),
+                          child: const Text('Merge'),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

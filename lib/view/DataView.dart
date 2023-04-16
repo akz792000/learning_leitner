@@ -8,7 +8,6 @@ import '../config/RouteConfig.dart';
 import '../entity/CardEntity.dart';
 import '../service/RouteService.dart';
 import '../util/DialogUtil.dart';
-import 'DownloadView.dart';
 
 class DataView extends StatefulWidget {
   const DataView({super.key});
@@ -94,10 +93,14 @@ class _DataViewState extends State<DataView> {
                   color: (index % 2 == 0) ? Colors.white : Colors.blue[100],
                   child: InkWell(
                     onTap: () async => await Get.find<RouteService>()
-                        .pushNamed(RouteConfig.merge, arguments: cardEntity),
+                        .pushReplacementNamed(RouteConfig.merge,
+                            arguments: cardEntity)
+                        .then((value) => Get.find<RouteService>()
+                            .pushNamed(RouteConfig.data)),
                     child: ListTile(
                       title: Text(cardEntity.en),
-                      subtitle: Text("Level: ${cardEntity.level}"),
+                      subtitle: Text(
+                          "Level: ${cardEntity.level} - SubLevel: ${cardEntity.subLevel} - Order: ${cardEntity.order}"),
                       trailing: IconButton(
                         onPressed: () => _onRemove(cardEntity),
                         icon: const Icon(
@@ -116,8 +119,10 @@ class _DataViewState extends State<DataView> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         heroTag: 'Add',
-        onPressed: () async =>
-            await Get.find<RouteService>().pushNamed(RouteConfig.persist),
+        onPressed: () async => await Get.find<RouteService>()
+            .pushReplacementNamed(RouteConfig.persist)
+            .then((value) =>
+                Get.find<RouteService>().pushNamed(RouteConfig.data)),
         child: const Icon(Icons.add),
       ),
       bottomNavigationBar: BottomAppBar(

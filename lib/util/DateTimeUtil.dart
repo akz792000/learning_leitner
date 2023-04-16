@@ -22,7 +22,7 @@ class DateTimeUtil {
     return intl.DateFormat("yyyy-MM-dd HH:mm").format(adjust);
   }
 
-  static daysBetween(tz.TZDateTime from) {
+  static daysToNow(tz.TZDateTime from) {
     var to = tz.TZDateTime.now(tz.local);
     return (to.difference(from).inHours / 24).round();
   }
