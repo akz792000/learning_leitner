@@ -20,6 +20,7 @@ class _DownloadViewState extends State<DownloadView> {
   final List<Map<String, dynamic>> _items = [
     {"name": "File_0", "toggle": false},
     {"name": "File_1", "toggle": false},
+    {"name": "File_2", "toggle": false},
   ];
   bool _toggle = false;
   int _selectedIndex = 0;
