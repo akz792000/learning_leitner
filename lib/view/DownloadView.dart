@@ -33,8 +33,8 @@ class _DownloadViewState extends State<DownloadView> {
       level: CardEntity.newbieLevel,
       subLevel: CardEntity.initSubLevel,
       order: 0,
-      fa: element["fa"],
-      en: element["en"],
+      fa: element["fa"] ?? "",
+      en: element["en"], // can be null
       de: element["de"] ?? "",
       desc: element["desc"] ?? "",
     );
