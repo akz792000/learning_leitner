@@ -56,6 +56,7 @@ class _LeitnerViewState extends State<LeitnerView> {
     if (!_cardEntity.orderChanged) {
       _cardEntity.order++;
       _cardEntity.orderChanged = true;
+      _cardRepository.merge(_cardEntity);
     }
   }
 
@@ -89,6 +90,7 @@ class _LeitnerViewState extends State<LeitnerView> {
     _cardEntity.subLevel = CardEntity.initSubLevel;
     _cardEntity.levelChanged = levelChanged;
     _cardEntity.modified = DateTimeUtil.now();
+    _cardRepository.merge(_cardEntity);
     setState(() {
       _level = _cardEntity.level;
     });
