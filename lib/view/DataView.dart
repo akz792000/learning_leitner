@@ -10,7 +10,9 @@ import '../service/RouteService.dart';
 import '../util/DialogUtil.dart';
 
 class DataView extends StatefulWidget {
-  const DataView({super.key});
+  const DataView({
+    super.key,
+  });
 
   @override
   createState() => _DataViewState();

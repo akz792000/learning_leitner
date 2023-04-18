@@ -24,7 +24,7 @@ class _DownloadViewState extends State<DownloadView> {
   bool _toggle = false;
   int _selectedIndex = 0;
 
-  Future<int> persist(Map element) {
+  Future<int> _persist(Map element) {
     var cardEntity = CardEntity(
       id: element["id"],
       created: DateTimeUtil.now(),
@@ -34,6 +34,7 @@ class _DownloadViewState extends State<DownloadView> {
       order: 0,
       fa: element["fa"],
       en: element["en"],
+      de: element["de"] ?? "",
       desc: element["desc"] ?? "",
     );
     return _cardRepository.merge(cardEntity);
@@ -52,7 +53,7 @@ class _DownloadViewState extends State<DownloadView> {
             item["toggle"] ||
             cardEntity.fa != element["fa"] ||
             cardEntity.en != element["en"]) {
-          persist(element);
+          _persist(element);
         }
       }
     } else {

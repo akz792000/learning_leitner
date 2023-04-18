@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:learning_leitner/enums/CountryEnum.dart';
 
 import '../config/RouteConfig.dart';
 import '../model/OptionModel.dart';
@@ -7,7 +8,9 @@ import '../service/RouteService.dart';
 import 'widget/DrawerWidget.dart';
 
 class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+  const HomeView({
+    super.key,
+  });
 
   @override
   createState() => _HomeViewState();
@@ -20,14 +23,15 @@ class _HomeViewState extends State<HomeView> {
       image: Image.asset('assets/flags/en.png'),
       title: 'English',
       subtitle: 'Learn english sentences.',
-      onTap: () async =>
-          await Get.find<RouteService>().pushNamed(RouteConfig.level),
+      onTap: () async => await Get.find<RouteService>()
+          .pushNamed(RouteConfig.level, arguments: CountryEnum.en),
     ),
     OptionModel(
       image: Image.asset('assets/flags/de.png'),
       title: 'Deutsch',
       subtitle: 'Englische Sätze lernen.',
-      onTap: () => debugPrint('Not work yet'),
+      onTap: () async => await Get.find<RouteService>()
+          .pushNamed(RouteConfig.level, arguments: CountryEnum.de),
     ),
     OptionModel(
       image: Image.asset('assets/database.png'),

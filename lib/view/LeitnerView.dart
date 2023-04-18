@@ -3,12 +3,18 @@ import 'package:learning_leitner/entity/CardEntity.dart';
 import 'package:learning_leitner/util/ColorUtil.dart';
 import 'package:learning_leitner/repository/CardRepository.dart';
 
+import '../enums/CountryEnum.dart';
 import '../util/DateTimeUtil.dart';
 import '../util/DialogUtil.dart';
 import '../widget/IconButtonWidget.dart';
 
 class LeitnerView extends StatefulWidget {
-  const LeitnerView({Key? key}) : super(key: key);
+  final CountryEnum countryEnum;
+
+  const LeitnerView({
+    Key? key,
+    required this.countryEnum,
+  }) : super(key: key);
 
   @override
   State<LeitnerView> createState() => _LeitnerViewState();
@@ -26,13 +32,15 @@ class _LeitnerViewState extends State<LeitnerView> {
 
   int _index = 0;
   TextDirection _textDirection = TextDirection.rtl;
-  String _language = 'fa';
   int _level = 1;
+  late CountryEnum _language;
 
   @override
   void initState() {
     super.initState();
-    _cards = _cardRepository.findAllBasedOnLeitner();
+    _language =
+        widget.countryEnum == CountryEnum.en ? CountryEnum.fa : CountryEnum.en;
+    _cards = _cardRepository.findAllByLeitner(widget.countryEnum);
     if (_cards.isNotEmpty) {
       _cardEntity = _cards.elementAt(0);
       _cardEntity.levelChanged = null;
@@ -46,10 +54,10 @@ class _LeitnerViewState extends State<LeitnerView> {
   @override
   void dispose() {
     super.dispose();
-    _cardRepository.findAll().forEach((element) {
-      element.orderChanged = false;
-      element.levelChanged = null;
-    });
+    for (var card in _cards) {
+      card.orderChanged = false;
+      card.levelChanged = null;
+    }
   }
 
   void _modifyOrder() {
@@ -60,7 +68,8 @@ class _LeitnerViewState extends State<LeitnerView> {
     }
   }
 
-  void _changeValue(int index, TextDirection textDirection, String language) {
+  void _changeValue(
+      int index, TextDirection textDirection, CountryEnum language) {
     setState(() {
       _cardEntity = _cards.elementAt(index);
       _textDirection = textDirection;
@@ -70,18 +79,29 @@ class _LeitnerViewState extends State<LeitnerView> {
   }
 
   void _onVerticalDragEnd(DragEndDetails details) {
-    if (_language != 'en') {
-      // details.primaryVelocity! > 0 ==> UP
-      _changeValue(_index, TextDirection.ltr, 'en');
-    } else if (_language != 'fa') {
-      // details.primaryVelocity! < 0 ==> DOWN
-      _changeValue(_index, TextDirection.rtl, 'fa');
+    if (widget.countryEnum == CountryEnum.en) {
+      if (_language != CountryEnum.en) {
+        // details.primaryVelocity! > 0 ==> UP
+        _changeValue(_index, TextDirection.ltr, CountryEnum.en);
+      } else if (_language != CountryEnum.fa) {
+        // details.primaryVelocity! < 0 ==> DOWN
+        _changeValue(_index, TextDirection.rtl, CountryEnum.fa);
+      }
+    } else {
+      if (_language != CountryEnum.de) {
+        // details.primaryVelocity! > 0 ==> UP
+        _changeValue(_index, TextDirection.ltr, CountryEnum.de);
+      } else if (_language != CountryEnum.en) {
+        // details.primaryVelocity! < 0 ==> DOWN
+        _changeValue(_index, TextDirection.rtl, CountryEnum.en);
+      }
     }
   }
 
   void _onPageChanged(value) {
     _index = value;
-    _changeValue(_index, TextDirection.rtl, 'fa');
+    _changeValue(_index, TextDirection.rtl,
+        widget.countryEnum == CountryEnum.en ? CountryEnum.fa : CountryEnum.en);
     _modifyOrder();
   }
 
@@ -164,18 +184,30 @@ class _LeitnerViewState extends State<LeitnerView> {
     return result;
   }
 
+  String _getText() {
+    return widget.countryEnum == CountryEnum.en
+        ? (_language == CountryEnum.fa
+        ? _cardEntity.fa
+        : _cardEntity.en)
+        : (_language == CountryEnum.en
+        ? _cardEntity.en
+        : _cardEntity.de);
+  }
+
   @override
   Widget build(BuildContext context) {
-    Widget body;
-    if (_cards.isEmpty) {
-      body = DialogUtil.ok(
-        context,
-        "Alert",
-        "There is no card to study.",
-        () => {},
-      );
-    } else {
-      body = GestureDetector(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Item ${_index + 1} of ${_cards.length}'),
+        centerTitle: true,
+        leading: InkWell(
+          child: const Icon(Icons.arrow_back_ios),
+          onTap: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body: GestureDetector(
         onVerticalDragEnd: (details) {
           _onVerticalDragEnd(details);
         },
@@ -209,9 +241,9 @@ class _LeitnerViewState extends State<LeitnerView> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           CircleAvatar(
-                            backgroundImage:
-                                Image.asset('assets/flags/$_language.png')
-                                    .image,
+                            backgroundImage: Image.asset(
+                                    'assets/flags/${_language.name}.png')
+                                .image,
                           ),
                         ],
                       ),
@@ -225,10 +257,7 @@ class _LeitnerViewState extends State<LeitnerView> {
                           Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Center(
-                              child: Text(
-                                _language == 'fa'
-                                    ? _cardEntity.fa
-                                    : _cardEntity.en,
+                              child: Text(_getText(),
                                 textDirection: _textDirection,
                                 style: const TextStyle(
                                     color: Colors.black,
@@ -258,20 +287,7 @@ class _LeitnerViewState extends State<LeitnerView> {
           scrollDirection: Axis.horizontal,
           itemCount: _cards.length,
         ),
-      );
-    }
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Item ${_index + 1} of ${_cards.length}'),
-        centerTitle: true,
-        leading: InkWell(
-          child: const Icon(Icons.arrow_back_ios),
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
       ),
-      body: body,
     );
   }
 }

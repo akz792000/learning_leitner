@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:learning_leitner/enums/CountryEnum.dart';
 import 'package:learning_leitner/model/OptionModel.dart';
 import 'package:learning_leitner/repository/CardRepository.dart';
 
@@ -7,7 +8,12 @@ import '../config/RouteConfig.dart';
 import '../service/RouteService.dart';
 
 class LevelView extends StatefulWidget {
-  const LevelView({super.key});
+  final CountryEnum countryEnum;
+
+  const LevelView({
+    Key? key,
+    required this.countryEnum,
+  }) : super(key: key);
 
   @override
   createState() => _LevelViewState();
@@ -21,8 +27,10 @@ class _LevelViewState extends State<LevelView> {
 
   void initialize() {
     setState(() {
-      _count = _cardRepository.findAll().length;
-      _cardRepository.findAllBasedOnLevel().forEach((key, value) {
+      _count = _cardRepository.findAllByCountry(widget.countryEnum).length;
+      _cardRepository
+          .findAllByCountryAndLevel(widget.countryEnum)
+          .forEach((key, value) {
         _optionModels.add(OptionModel(
           image: Image.asset('assets/levels/$key.png'),
           title: "Level $key",
@@ -92,26 +100,18 @@ class _LevelViewState extends State<LevelView> {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        heroTag: 'Play',
-        onPressed: () async => await Get.find<RouteService>()
-            .pushReplacementNamed(RouteConfig.leitner)
-            .then((value) =>
-                Get.find<RouteService>().pushNamed(RouteConfig.level)),
-        child: const Icon(Icons.play_arrow),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 8.0,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: const [
-            Padding(
-              padding: EdgeInsets.all(8),
+      floatingActionButton: _count == 0
+          ? null
+          : FloatingActionButton(
+              heroTag: 'Play',
+              onPressed: () async => await Get.find<RouteService>()
+                  .pushReplacementNamed(RouteConfig.leitner,
+                      arguments: widget.countryEnum)
+                  .then((value) => Get.find<RouteService>().pushNamed(
+                      RouteConfig.level,
+                      arguments: widget.countryEnum)),
+              child: const Icon(Icons.play_arrow),
             ),
-          ],
-        ),
-      ),
     );
   }
 }

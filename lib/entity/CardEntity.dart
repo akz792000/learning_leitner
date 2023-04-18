@@ -34,6 +34,9 @@ class CardEntity {
   String en;
 
   @HiveField(8)
+  String de;
+
+  @HiveField(9)
   String desc;
 
   // generated
@@ -51,6 +54,7 @@ class CardEntity {
     required this.order,
     required this.fa,
     required this.en,
+    required this.de,
     required this.desc,
   });
 }

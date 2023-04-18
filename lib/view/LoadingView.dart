@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoadingView extends StatefulWidget {
-  const LoadingView({Key? key}) : super(key: key);
+  const LoadingView({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<LoadingView> createState() => _LoadingViewState();

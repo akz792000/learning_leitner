@@ -28,6 +28,7 @@ class _MergeViewState extends State<MergeView> {
   late final int _subLevel;
   late final TextEditingController _faController;
   late final TextEditingController _enController;
+  late final TextEditingController _deController;
   late final TextEditingController _descController;
   late final TextEditingController _orderController;
 
@@ -51,6 +52,7 @@ class _MergeViewState extends State<MergeView> {
         TextEditingController(text: widget.cardEntity.order.toString());
     _faController = TextEditingController(text: widget.cardEntity.fa);
     _enController = TextEditingController(text: widget.cardEntity.en);
+    _deController = TextEditingController(text: widget.cardEntity.de);
     _descController = TextEditingController(text: widget.cardEntity.desc);
   }
 
@@ -65,6 +67,7 @@ class _MergeViewState extends State<MergeView> {
         order: int.parse(_orderController.text),
         fa: _faController.text,
         en: _enController.text,
+        de: _deController.text,
         desc: _descController.text,
       );
       _cardRepository.merge(cardEntity);
@@ -98,7 +101,6 @@ class _MergeViewState extends State<MergeView> {
                     TextFormField(
                       textDirection: TextDirection.rtl,
                       controller: _faController,
-                      validator: _fieldValidator,
                     ),
 
                     // en
@@ -110,6 +112,16 @@ class _MergeViewState extends State<MergeView> {
                     TextFormField(
                       controller: _enController,
                       validator: _fieldValidator,
+                    ),
+
+                    // de
+                    const SizedBox(height: 24.0),
+                    const Text(
+                      'Deutsch',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextFormField(
+                      controller: _deController,
                     ),
 
                     // desc

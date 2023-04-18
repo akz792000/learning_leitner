@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:learning_leitner/entity/CardEntity.dart';
 
+import '../enums/CountryEnum.dart';
 import '../view/DataView.dart';
 import '../view/DownloadView.dart';
 import '../view/ErrorView.dart';
@@ -28,11 +29,15 @@ class RouteConfig {
       case home:
         return _buildRoute(const HomeView());
       case level:
-        return _buildRoute(const LevelView());
+        return _buildRoute(LevelView(
+          countryEnum: settings.arguments as CountryEnum,
+        ));
       case data:
         return _buildRoute(const DataView());
       case leitner:
-        return _buildRoute(const LeitnerView());
+        return _buildRoute(LeitnerView(
+          countryEnum: settings.arguments as CountryEnum,
+        ));
       case persist:
         return _buildRoute(const PersistView());
       case merge:

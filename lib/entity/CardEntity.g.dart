@@ -31,29 +31,32 @@ class CardEntityAdapter extends TypeAdapter<CardEntity> {
           : tz.TZDateTime.now(tz.local),
 
       // level
-      level: fields[3] != null ? fields[3] as int : 0,
+      level: (fields[3] ?? 0) as int,
 
       // subLevel
-      subLevel: fields[4] != null ? fields[4] as int : 0,
+      subLevel: (fields[4] ?? 0) as int,
 
       // order
-      order: fields[5] != null ? fields[5] as int : 0,
+      order: (fields[5] ?? 0) as int,
 
       // fa
-      fa: fields[6] as String,
+      fa: (fields[6] ?? "") as String,
 
       // en
-      en: fields[7] as String,
+      en: (fields[7] ?? "") as String,
+
+      // de
+      de: (fields[8] ?? "") as String,
 
       // desc
-      desc: fields[8] as String,
+      desc: (fields[9] ?? "") as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, CardEntity obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
 
       // id
       ..writeByte(0)
@@ -87,8 +90,12 @@ class CardEntityAdapter extends TypeAdapter<CardEntity> {
       ..writeByte(7)
       ..write(obj.en)
 
-      // desc
+      // de
       ..writeByte(8)
+      ..write(obj.de)
+
+      // desc
+      ..writeByte(9)
       ..write(obj.desc);
   }
 

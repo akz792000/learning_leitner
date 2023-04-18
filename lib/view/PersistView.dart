@@ -5,7 +5,9 @@ import 'package:learning_leitner/util/DateTimeUtil.dart';
 import '../repository/CardRepository.dart';
 
 class PersistView extends StatefulWidget {
-  const PersistView({Key? key}) : super(key: key);
+  const PersistView({
+    Key? key,
+  }) : super(key: key);
 
   @override
   createState() => _PersistViewState();
@@ -15,6 +17,7 @@ class _PersistViewState extends State<PersistView> {
   final _cardRepository = CardRepository();
   final _faController = TextEditingController();
   final _enController = TextEditingController();
+  final _deController = TextEditingController();
   final _descController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -36,6 +39,7 @@ class _PersistViewState extends State<PersistView> {
         order: 0,
         fa: _faController.text,
         en: _enController.text,
+        de: _deController.text,
         desc: _descController.text,
       );
       _cardRepository.merge(cardEntity);
@@ -65,7 +69,6 @@ class _PersistViewState extends State<PersistView> {
               TextFormField(
                 textDirection: TextDirection.rtl,
                 controller: _faController,
-                validator: _fieldValidator,
               ),
 
               // en
@@ -77,6 +80,16 @@ class _PersistViewState extends State<PersistView> {
               TextFormField(
                 controller: _enController,
                 validator: _fieldValidator,
+              ),
+
+              // de
+              const SizedBox(height: 24.0),
+              const Text(
+                'Deutsch',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              TextFormField(
+                controller: _deController,
               ),
 
               // desc

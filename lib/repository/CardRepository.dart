@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:learning_leitner/enums/CountryEnum.dart';
 import 'package:learning_leitner/util/DateTimeUtil.dart';
 
 import '../entity/CardEntity.dart';
@@ -44,7 +45,19 @@ class CardRepository {
     return box.values.toList();
   }
 
-  List findAllBasedOnDateDifference() {
+  List findAllByCountry(CountryEnum countryEnum) {
+    var box = Hive.box(boxId);
+    test(element) {
+      if (countryEnum == CountryEnum.en) {
+        return element.fa != "" && element.en != "";
+      } else {
+        return element.de != "" && element.en != "";
+      }
+    }
+    return box.values.where((element) => test(element)).toList();
+  }
+
+  List findAllByDateDifference() {
     var box = Hive.box(boxId);
     return box.values
         .where((element) =>
@@ -54,12 +67,12 @@ class CardRepository {
         .toList();
   }
 
-  List findAllBasedOnLeitner() {
-    var box = Hive.box(boxId);
+  List findAllByLeitner(CountryEnum countryEnum) {
+    var elements = findAllByCountry(countryEnum);
 
     // group based on group level
     Map<int, dynamic> groupLevel = {};
-    for (var element in box.values) {
+    for (var element in elements) {
       groupLevel[element.level] = groupLevel[element.level] ?? [];
       groupLevel[element.level].add(element);
     }
@@ -104,12 +117,12 @@ class CardRepository {
     return result;
   }
 
-  Map<int, int> findAllBasedOnLevel() {
-    var box = Hive.box(boxId);
+  Map<int, int> findAllByCountryAndLevel(CountryEnum countryEnum) {
+    var elements = findAllByCountry(countryEnum);
 
     // categorize based on the group level
     Map<int, int> groupLevel = {};
-    for (var element in box.values) {
+    for (var element in elements) {
       var val = groupLevel[element.level] ?? 0;
       groupLevel[element.level] = val + 1;
     }
