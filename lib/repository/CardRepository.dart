@@ -95,7 +95,7 @@ class CardRepository {
          */
         var maxSubLevelCount = pow(2, key - 1);
         for (var item in items) {
-          if (DateTimeUtil.daysToNow(item.modified) >= 1) {
+          if (DateTimeUtil.daysToNow(item.modified) >= maxSubLevelCount) {
             if (item.subLevel == maxSubLevelCount) {
               addedItems.add(item);
             } else {
