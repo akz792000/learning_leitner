@@ -34,7 +34,8 @@ class _DownloadViewState extends State<DownloadView> {
       subLevel: CardEntity.initSubLevel,
       order: 0,
       fa: element["fa"] ?? "",
-      en: element["en"], // can be null
+      en: element["en"],
+      // can be null
       de: element["de"] ?? "",
       desc: element["desc"] ?? "",
     );
@@ -52,8 +53,9 @@ class _DownloadViewState extends State<DownloadView> {
         CardEntity? cardEntity = _cardRepository.findById(element["id"]);
         if (cardEntity == null ||
             item["toggle"] ||
-            cardEntity.fa != element["fa"] ||
-            cardEntity.en != element["en"]) {
+            (element["fa"] != null && cardEntity.fa != element["fa"]) ||
+            (element["en"] != null && cardEntity.en != element["en"]) ||
+            (element["de"] != null && cardEntity.de != element["de"])) {
           _persist(element);
         }
       }

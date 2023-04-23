@@ -24,14 +24,14 @@ class _HomeViewState extends State<HomeView> {
       title: 'English',
       subtitle: 'Learn english sentences.',
       onTap: () async => await Get.find<RouteService>()
-          .pushNamed(RouteConfig.level, arguments: CountryEnum.en),
+          .pushNamed(RouteConfig.level, arguments: LanguageDirectionEnum.en),
     ),
     OptionModel(
       image: Image.asset('assets/flags/de.png'),
       title: 'Deutsch',
       subtitle: 'Englische Sätze lernen.',
       onTap: () async => await Get.find<RouteService>()
-          .pushNamed(RouteConfig.level, arguments: CountryEnum.de),
+          .pushNamed(RouteConfig.level, arguments: LanguageDirectionEnum.de),
     ),
     OptionModel(
       image: Image.asset('assets/database.png'),

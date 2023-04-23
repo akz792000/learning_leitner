@@ -45,10 +45,10 @@ class CardRepository {
     return box.values.toList();
   }
 
-  List findAllByCountry(CountryEnum countryEnum) {
+  List findAllByCountry(LanguageDirectionEnum countryEnum) {
     var box = Hive.box(boxId);
     test(element) {
-      if (countryEnum == CountryEnum.en) {
+      if (countryEnum == LanguageDirectionEnum.en) {
         return element.fa != "" && element.en != "";
       } else {
         return element.de != "" && element.en != "";
@@ -67,7 +67,7 @@ class CardRepository {
         .toList();
   }
 
-  List findAllByLeitner(CountryEnum countryEnum) {
+  List findAllByLeitner(LanguageDirectionEnum countryEnum) {
     var elements = findAllByCountry(countryEnum);
 
     // group based on group level
@@ -117,7 +117,7 @@ class CardRepository {
     return result;
   }
 
-  Map<int, int> findAllByCountryAndLevel(CountryEnum countryEnum) {
+  Map<int, int> findAllByCountryAndLevel(LanguageDirectionEnum countryEnum) {
     var elements = findAllByCountry(countryEnum);
 
     // categorize based on the group level

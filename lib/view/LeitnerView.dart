@@ -9,11 +9,11 @@ import '../util/DialogUtil.dart';
 import '../widget/IconButtonWidget.dart';
 
 class LeitnerView extends StatefulWidget {
-  final CountryEnum countryEnum;
+  final LanguageDirectionEnum languageDirectionEnum;
 
   const LeitnerView({
     Key? key,
-    required this.countryEnum,
+    required this.languageDirectionEnum,
   }) : super(key: key);
 
   @override
@@ -31,16 +31,18 @@ class _LeitnerViewState extends State<LeitnerView> {
   late CardEntity _cardEntity;
 
   int _index = 0;
-  TextDirection _textDirection = TextDirection.rtl;
   int _level = 1;
-  late CountryEnum _language;
+  late LanguageDirectionEnum _languageDirection;
 
   @override
   void initState() {
     super.initState();
-    _language =
-        widget.countryEnum == CountryEnum.en ? CountryEnum.fa : CountryEnum.en;
-    _cards = _cardRepository.findAllByLeitner(widget.countryEnum);
+    if (widget.languageDirectionEnum == LanguageDirectionEnum.en) {
+      _languageDirection = LanguageDirectionEnum.fa;
+    } else {
+      _languageDirection = LanguageDirectionEnum.en;
+    }
+    _cards = _cardRepository.findAllByLeitner(widget.languageDirectionEnum);
     if (_cards.isNotEmpty) {
       _cardEntity = _cards.elementAt(0);
       _cardEntity.levelChanged = null;
@@ -69,39 +71,17 @@ class _LeitnerViewState extends State<LeitnerView> {
   }
 
   void _changeValue(
-      int index, TextDirection textDirection, CountryEnum language) {
+      int index, LanguageDirectionEnum language) {
     setState(() {
       _cardEntity = _cards.elementAt(index);
-      _textDirection = textDirection;
-      _language = language;
+      _languageDirection = language;
       _level = _cardEntity.level;
     });
   }
 
-  void _onVerticalDragEnd(DragEndDetails details) {
-    if (widget.countryEnum == CountryEnum.en) {
-      if (_language != CountryEnum.en) {
-        // details.primaryVelocity! > 0 ==> UP
-        _changeValue(_index, TextDirection.ltr, CountryEnum.en);
-      } else if (_language != CountryEnum.fa) {
-        // details.primaryVelocity! < 0 ==> DOWN
-        _changeValue(_index, TextDirection.rtl, CountryEnum.fa);
-      }
-    } else {
-      if (_language != CountryEnum.de) {
-        // details.primaryVelocity! > 0 ==> UP
-        _changeValue(_index, TextDirection.ltr, CountryEnum.de);
-      } else if (_language != CountryEnum.en) {
-        // details.primaryVelocity! < 0 ==> DOWN
-        _changeValue(_index, TextDirection.rtl, CountryEnum.en);
-      }
-    }
-  }
-
   void _onPageChanged(value) {
     _index = value;
-    _changeValue(_index, TextDirection.rtl,
-        widget.countryEnum == CountryEnum.en ? CountryEnum.fa : CountryEnum.en);
+    _changeValue(_index, widget.languageDirectionEnum == LanguageDirectionEnum.en ? LanguageDirectionEnum.fa : LanguageDirectionEnum.en);
     _modifyOrder();
   }
 
@@ -117,6 +97,26 @@ class _LeitnerViewState extends State<LeitnerView> {
     if (_index < _cards.length - 1) {
       _pageController.animateToPage(_index + 1,
           duration: const Duration(milliseconds: 300), curve: Curves.linear);
+    }
+  }
+
+  void _onVerticalDragEnd(DragEndDetails details) {
+    if (widget.languageDirectionEnum == LanguageDirectionEnum.en) {
+      if (_languageDirection != LanguageDirectionEnum.en) {
+        // details.primaryVelocity! > 0 ==> UP
+        _changeValue(_index, LanguageDirectionEnum.en);
+      } else if (_languageDirection != LanguageDirectionEnum.fa) {
+        // details.primaryVelocity! < 0 ==> DOWN
+        _changeValue(_index, LanguageDirectionEnum.fa);
+      }
+    } else {
+      if (_languageDirection != LanguageDirectionEnum.de) {
+        // details.primaryVelocity! > 0 ==> UP
+        _changeValue(_index, LanguageDirectionEnum.de);
+      } else if (_languageDirection != LanguageDirectionEnum.en) {
+        // details.primaryVelocity! < 0 ==> DOWN
+        _changeValue(_index, LanguageDirectionEnum.en);
+      }
     }
   }
 
@@ -185,11 +185,11 @@ class _LeitnerViewState extends State<LeitnerView> {
   }
 
   String _getText() {
-    return widget.countryEnum == CountryEnum.en
-        ? (_language == CountryEnum.fa
+    return widget.languageDirectionEnum == LanguageDirectionEnum.en
+        ? (_languageDirection == LanguageDirectionEnum.fa
         ? _cardEntity.fa
         : _cardEntity.en)
-        : (_language == CountryEnum.en
+        : (_languageDirection == LanguageDirectionEnum.en
         ? _cardEntity.en
         : _cardEntity.de);
   }
@@ -242,7 +242,7 @@ class _LeitnerViewState extends State<LeitnerView> {
                         children: [
                           CircleAvatar(
                             backgroundImage: Image.asset(
-                                    'assets/flags/${_language.name}.png')
+                                    'assets/flags/${_languageDirection.name}.png')
                                 .image,
                           ),
                         ],
@@ -258,7 +258,7 @@ class _LeitnerViewState extends State<LeitnerView> {
                             padding: const EdgeInsets.all(10.0),
                             child: Center(
                               child: Text(_getText(),
-                                textDirection: _textDirection,
+                                textDirection: _languageDirection.getDirection(),
                                 style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 30.0,

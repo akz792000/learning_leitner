@@ -8,7 +8,7 @@ import '../config/RouteConfig.dart';
 import '../service/RouteService.dart';
 
 class LevelView extends StatefulWidget {
-  final CountryEnum countryEnum;
+  final LanguageDirectionEnum countryEnum;
 
   const LevelView({
     Key? key,
