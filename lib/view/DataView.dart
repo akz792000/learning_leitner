@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:learning_leitner/repository/CardRepository.dart';
 
 import '../config/RouteConfig.dart';
 import '../entity/CardEntity.dart';
+import '../enums/CountryEnum.dart';
+import '../helper/ListNotifierHelper.dart';
 import '../service/RouteService.dart';
 import '../util/DialogUtil.dart';
 
 class DataView extends StatefulWidget {
+  final LanguageDirectionEnum languageDirectionEnum;
+
   const DataView({
-    super.key,
-  });
+    Key? key,
+    required this.languageDirectionEnum,
+  }) : super(key: key);
 
   @override
   createState() => _DataViewState();
@@ -20,12 +23,12 @@ class DataView extends StatefulWidget {
 
 class _DataViewState extends State<DataView> {
   final _cardRepository = CardRepository();
-  late int _count;
+  late List _cardEntities;
 
   void _initialize() {
     debugPrint("DataView initialize");
     setState(() {
-      _count = _cardRepository.findAll().length;
+      _cardEntities = _cardRepository.findAllByCountry(widget.languageDirectionEnum);
     });
   }
 
@@ -53,12 +56,6 @@ class _DataViewState extends State<DataView> {
     );
   }
 
-  Future<void> _onDownload() async {
-    return await Get.find<RouteService>()
-        .pushReplacementNamed(RouteConfig.download)
-        .then((value) => Get.find<RouteService>().pushNamed(RouteConfig.data));
-  }
-
   void _onRemoveAll() {
     DialogUtil.okCancel(
       context,
@@ -76,29 +73,34 @@ class _DataViewState extends State<DataView> {
     debugPrint("Home build");
     return Scaffold(
       appBar: AppBar(
-        title: Text("Card: $_count"),
+        title: Text("${widget.languageDirectionEnum.getLanguage()} Data Cards: ${_cardEntities.length}"),
+        leading: InkWell(
+            child: const Icon(Icons.arrow_back_ios),
+            onTap: () async => await Get.find<RouteService>().pushReplacementNamed(
+              RouteConfig.level,
+              arguments: widget.languageDirectionEnum,
+            )),
       ),
-      body: ValueListenableBuilder(
-        valueListenable: _cardRepository.listenable(),
-        builder: (context, Box box, widget) {
-          if (box.isEmpty) {
+      body: ValueListenableBuilder<List>(
+        valueListenable: ListNotifierHelper(_cardEntities),
+        builder: (context, List cardEntities, widget) {
+          if (cardEntities.isEmpty) {
             return const Center(
               child: Text('Empty'),
             );
           } else {
             return ListView.builder(
-              itemCount: box.length,
+              itemCount: cardEntities.length,
               itemBuilder: (context, index) {
-                var currentBox = box;
-                var cardEntity = currentBox.getAt(index)!;
+                var currentBox = cardEntities;
+                var cardEntity = currentBox.elementAt(index);
                 return Container(
                   color: (index % 2 == 0) ? Colors.white : Colors.blue[100],
                   child: InkWell(
                     onTap: () async => await Get.find<RouteService>()
-                        .pushReplacementNamed(RouteConfig.merge,
+                        .pushNamed(RouteConfig.merge,
                             arguments: cardEntity)
-                        .then((value) => Get.find<RouteService>()
-                            .pushNamed(RouteConfig.data)),
+                        .then((value) => _initialize()),
                     child: ListTile(
                       title: Text(cardEntity.en),
                       subtitle: Text(
@@ -122,30 +124,16 @@ class _DataViewState extends State<DataView> {
       floatingActionButton: FloatingActionButton(
         heroTag: 'Add',
         onPressed: () async => await Get.find<RouteService>()
-            .pushReplacementNamed(RouteConfig.persist)
-            .then((value) =>
-                Get.find<RouteService>().pushNamed(RouteConfig.data)),
+            .pushNamed(RouteConfig.persist)
+            .then((value) => _initialize()),
         child: const Icon(Icons.add),
       ),
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
         notchMargin: 8.0,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 4, 8, 4),
-              child: SizedBox(
-                child: TextButton(
-                  child: const Icon(
-                    Icons.cloud_download_rounded,
-                    color: Colors.lightBlue,
-                    size: 26,
-                  ),
-                  onPressed: () async => _onDownload(),
-                ),
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 4, 8, 4),
               child: SizedBox(

@@ -35,10 +35,10 @@ class _HomeViewState extends State<HomeView> {
     ),
     OptionModel(
       image: Image.asset('assets/database.png'),
-      title: 'Data',
-      subtitle: 'Write down your sentences.',
-      onTap: () async =>
-          await Get.find<RouteService>().pushNamed(RouteConfig.data),
+      title: 'Download',
+      subtitle: 'Download sentences',
+      onTap: () async => await Get.find<RouteService>()
+          .pushNamed(RouteConfig.download),
     ),
   ];
 

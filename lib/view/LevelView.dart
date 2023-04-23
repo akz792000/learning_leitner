@@ -8,11 +8,11 @@ import '../config/RouteConfig.dart';
 import '../service/RouteService.dart';
 
 class LevelView extends StatefulWidget {
-  final LanguageDirectionEnum countryEnum;
+  final LanguageDirectionEnum languageDirectionEnum;
 
   const LevelView({
     Key? key,
-    required this.countryEnum,
+    required this.languageDirectionEnum,
   }) : super(key: key);
 
   @override
@@ -27,9 +27,10 @@ class _LevelViewState extends State<LevelView> {
 
   void initialize() {
     setState(() {
-      _count = _cardRepository.findAllByCountry(widget.countryEnum).length;
+      _count =
+          _cardRepository.findAllByCountry(widget.languageDirectionEnum).length;
       _cardRepository
-          .findAllByCountryAndLevel(widget.countryEnum)
+          .findAllByCountryAndLevel(widget.languageDirectionEnum)
           .forEach((key, value) {
         _optionModels.add(OptionModel(
           image: Image.asset('assets/levels/$key.png'),
@@ -50,8 +51,13 @@ class _LevelViewState extends State<LevelView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Card: $_count"),
-      ),
+          title: Text("${widget.languageDirectionEnum.getLanguage()} Level Cards: $_count"),
+          leading: InkWell(
+            child: const Icon(Icons.arrow_back_ios),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          )),
       body: ListView.builder(
         itemCount: _optionModels.length + 2,
         itemBuilder: (BuildContext context, int index) {
@@ -64,7 +70,6 @@ class _LevelViewState extends State<LevelView> {
             alignment: Alignment.center,
             margin: const EdgeInsets.all(10.0),
             width: double.infinity,
-            height: 80.0,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(10.0),
@@ -104,14 +109,39 @@ class _LevelViewState extends State<LevelView> {
           ? null
           : FloatingActionButton(
               heroTag: 'Play',
-              onPressed: () async => await Get.find<RouteService>()
-                  .pushReplacementNamed(RouteConfig.leitner,
-                      arguments: widget.countryEnum)
-                  .then((value) => Get.find<RouteService>().pushNamed(
-                      RouteConfig.level,
-                      arguments: widget.countryEnum)),
               child: const Icon(Icons.play_arrow),
+              onPressed: () async =>
+                  await Get.find<RouteService>().pushReplacementNamed(
+                RouteConfig.leitner,
+                arguments: widget.languageDirectionEnum,
+              ),
             ),
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 8.0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 4, 8, 4),
+              child: SizedBox(
+                child: TextButton(
+                  child: const Icon(
+                    Icons.text_snippet_outlined,
+                    color: Colors.lightBlue,
+                    size: 26,
+                  ),
+                  onPressed: () async =>
+                      await Get.find<RouteService>().pushReplacementNamed(
+                    RouteConfig.data,
+                    arguments: widget.languageDirectionEnum,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

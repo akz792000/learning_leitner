@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:learning_leitner/entity/CardEntity.dart';
 import 'package:learning_leitner/util/ColorUtil.dart';
 import 'package:learning_leitner/repository/CardRepository.dart';
 
+import '../config/RouteConfig.dart';
 import '../enums/CountryEnum.dart';
+import '../service/RouteService.dart';
 import '../util/DateTimeUtil.dart';
 import '../util/DialogUtil.dart';
 import '../widget/IconButtonWidget.dart';
@@ -70,8 +73,7 @@ class _LeitnerViewState extends State<LeitnerView> {
     }
   }
 
-  void _changeValue(
-      int index, LanguageDirectionEnum language) {
+  void _changeValue(int index, LanguageDirectionEnum language) {
     setState(() {
       _cardEntity = _cards.elementAt(index);
       _languageDirection = language;
@@ -81,7 +83,11 @@ class _LeitnerViewState extends State<LeitnerView> {
 
   void _onPageChanged(value) {
     _index = value;
-    _changeValue(_index, widget.languageDirectionEnum == LanguageDirectionEnum.en ? LanguageDirectionEnum.fa : LanguageDirectionEnum.en);
+    _changeValue(
+        _index,
+        widget.languageDirectionEnum == LanguageDirectionEnum.en
+            ? LanguageDirectionEnum.fa
+            : LanguageDirectionEnum.en);
     _modifyOrder();
   }
 
@@ -187,11 +193,11 @@ class _LeitnerViewState extends State<LeitnerView> {
   String _getText() {
     return widget.languageDirectionEnum == LanguageDirectionEnum.en
         ? (_languageDirection == LanguageDirectionEnum.fa
-        ? _cardEntity.fa
-        : _cardEntity.en)
+            ? _cardEntity.fa
+            : _cardEntity.en)
         : (_languageDirection == LanguageDirectionEnum.en
-        ? _cardEntity.en
-        : _cardEntity.de);
+            ? _cardEntity.en
+            : _cardEntity.de);
   }
 
   @override
@@ -201,11 +207,11 @@ class _LeitnerViewState extends State<LeitnerView> {
         title: Text('Item ${_index + 1} of ${_cards.length}'),
         centerTitle: true,
         leading: InkWell(
-          child: const Icon(Icons.arrow_back_ios),
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
+            child: const Icon(Icons.arrow_back_ios),
+            onTap: () async => await Get.find<RouteService>().pushReplacementNamed(
+                  RouteConfig.level,
+                  arguments: widget.languageDirectionEnum,
+                )),
       ),
       body: GestureDetector(
         onVerticalDragEnd: (details) {
@@ -257,8 +263,10 @@ class _LeitnerViewState extends State<LeitnerView> {
                           Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Center(
-                              child: Text(_getText(),
-                                textDirection: _languageDirection.getDirection(),
+                              child: Text(
+                                _getText(),
+                                textDirection:
+                                    _languageDirection.getDirection(),
                                 style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 30.0,
