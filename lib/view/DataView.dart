@@ -58,15 +58,19 @@ class _DataViewState extends State<DataView> {
   }
 
   void _onRemoveAll() {
-    DialogUtil.okCancel(
-      context,
-      "Alert",
-      "Do you want to delete all items?",
-      () {
-        _cardRepository.removeAll();
-        _initialize();
-      },
-    );
+    if (_cardEntities.isEmpty) {
+      DialogUtil.ok(context, "Alert", "There is no item to remove", null);
+    } else {
+      DialogUtil.okCancel(
+        context,
+        "Alert",
+        "Do you want to delete all items?",
+        () {
+          _cardRepository.removeAll();
+          _initialize();
+        },
+      );
+    }
   }
 
   @override

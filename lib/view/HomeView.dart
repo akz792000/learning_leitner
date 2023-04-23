@@ -5,7 +5,7 @@ import 'package:learning_leitner/enums/CountryEnum.dart';
 import '../config/RouteConfig.dart';
 import '../model/OptionModel.dart';
 import '../service/RouteService.dart';
-import 'widget/DrawerWidget.dart';
+import 'DrawerWidgetView.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({

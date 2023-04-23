@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class DrawerWidget extends StatelessWidget {
   const DrawerWidget({super.key});
@@ -67,6 +70,11 @@ class DrawerWidget extends StatelessWidget {
               title: const Text("Logout"),
               onTap: () {
                 debugPrint("Not implemented yet.");
+                if (Platform.isAndroid) {
+                  SystemNavigator.pop();
+                } else if (Platform.isIOS) {
+                  exit(0);
+                }
               },
             ),
           ],
