@@ -10,11 +10,11 @@ import '../service/RouteService.dart';
 import '../util/DialogUtil.dart';
 
 class DataView extends StatefulWidget {
-  final LanguageDirectionEnum languageDirectionEnum;
+  final LanguageEnum languageEnum;
 
   const DataView({
     Key? key,
-    required this.languageDirectionEnum,
+    required this.languageEnum,
   }) : super(key: key);
 
   @override
@@ -29,7 +29,7 @@ class _DataViewState extends State<DataView> {
     debugPrint("DataView initialize");
     setState(() {
       _cardEntities =
-          _cardRepository.findAllByCountry(widget.languageDirectionEnum);
+          _cardRepository.findAllByCountry(widget.languageEnum);
     });
   }
 
@@ -79,14 +79,14 @@ class _DataViewState extends State<DataView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            "${widget.languageDirectionEnum.getLanguage()} Data Cards: ${_cardEntities.length}"),
+            "${widget.languageEnum.getLanguage()} Data Cards: ${_cardEntities.length}"),
         leading: InkWell(
             child: const Icon(Icons.arrow_back_ios),
             onTap: () async =>
                 await Get.find<RouteService>().pushReplacementNamed(
                   RouteConfig.level,
                   arguments: {
-                    "languageDirectionEnum": widget.languageDirectionEnum,
+                    "languageEnum": widget.languageEnum,
                   },
                 )),
       ),

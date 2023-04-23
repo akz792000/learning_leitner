@@ -31,15 +31,16 @@ class RouteConfig {
         return _buildRoute(const HomeView());
       case level:
         return _buildRoute(LevelView(
-          languageDirectionEnum: args!["languageDirectionEnum"],
+          languageEnum: args!["languageEnum"],
         ));
       case data:
         return _buildRoute(DataView(
-          languageDirectionEnum: args!["languageDirectionEnum"],
+          languageEnum: args!["languageEnum"],
         ));
       case leitner:
         return _buildRoute(LeitnerView(
-          languageDirectionEnum: args!["languageDirectionEnum"],
+          languageEnum: args!["languageEnum"],
+          level: args!["level"],
         ));
       case persist:
         return _buildRoute(const PersistView());

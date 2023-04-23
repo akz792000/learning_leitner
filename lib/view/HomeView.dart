@@ -20,26 +20,29 @@ class _HomeViewState extends State<HomeView> {
   int _selectedOption = 0;
   final _optionModels = [
     OptionModel(
+        level: 0,
         image: Image.asset('assets/flags/en.png'),
         title: 'English',
         subtitle: 'Learn english sentences.',
         onTap: () async => await Get.find<RouteService>().pushNamed(
               RouteConfig.level,
               arguments: {
-                "languageDirectionEnum": LanguageDirectionEnum.en,
+                "languageEnum": LanguageEnum.en,
               },
             )),
     OptionModel(
+        level: 1,
         image: Image.asset('assets/flags/de.png'),
         title: 'Deutsch',
         subtitle: 'Englische Sätze lernen.',
         onTap: () async => await Get.find<RouteService>().pushNamed(
               RouteConfig.level,
               arguments: {
-                "languageDirectionEnum": LanguageDirectionEnum.de,
+                "languageEnum": LanguageEnum.de,
               },
             )),
     OptionModel(
+      level: 2,
       image: Image.asset('assets/database.png'),
       title: 'Download',
       subtitle: 'Download sentences',

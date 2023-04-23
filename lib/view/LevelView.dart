@@ -8,11 +8,11 @@ import '../config/RouteConfig.dart';
 import '../service/RouteService.dart';
 
 class LevelView extends StatefulWidget {
-  final LanguageDirectionEnum languageDirectionEnum;
+  final LanguageEnum languageEnum;
 
   const LevelView({
     Key? key,
-    required this.languageDirectionEnum,
+    required this.languageEnum,
   }) : super(key: key);
 
   @override
@@ -27,12 +27,12 @@ class _LevelViewState extends State<LevelView> {
 
   void initialize() {
     setState(() {
-      _count =
-          _cardRepository.findAllByCountry(widget.languageDirectionEnum).length;
+      _count = _cardRepository.findAllByCountry(widget.languageEnum).length;
       _cardRepository
-          .findAllByCountryAndLevel(widget.languageDirectionEnum)
+          .findAllLevelBasedByLanguage(widget.languageEnum)
           .forEach((key, value) {
         _optionModels.add(OptionModel(
+          level: key,
           image: Image.asset('assets/levels/$key.png'),
           title: "Level $key",
           subtitle: "Items: $value",
@@ -51,8 +51,8 @@ class _LevelViewState extends State<LevelView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text(
-              "${widget.languageDirectionEnum.getLanguage()} Level Cards: $_count"),
+          title:
+              Text("${widget.languageEnum.getLanguage()} Level Cards: $_count"),
           leading: InkWell(
             child: const Icon(Icons.arrow_back_ios),
             onTap: () {
@@ -101,6 +101,19 @@ class _LevelViewState extends State<LevelView> {
                   _selectedOption = index - 1;
                 });
               },
+              trailing: IconButton(
+                onPressed: () async =>
+                    await Get.find<RouteService>().pushReplacementNamed(
+                  RouteConfig.leitner,
+                  arguments: {
+                    "languageEnum": widget.languageEnum,
+                    "level": _optionModels[index - 1].level,
+                  },
+                ),
+                icon: const Icon(
+                  Icons.play_circle,
+                ),
+              ),
             ),
           );
         },
@@ -115,7 +128,8 @@ class _LevelViewState extends State<LevelView> {
                   await Get.find<RouteService>().pushReplacementNamed(
                 RouteConfig.leitner,
                 arguments: {
-                  "languageDirectionEnum": widget.languageDirectionEnum,
+                  "languageEnum": widget.languageEnum,
+                  "level": -1,
                 },
               ),
             ),
@@ -138,7 +152,7 @@ class _LevelViewState extends State<LevelView> {
                       await Get.find<RouteService>().pushReplacementNamed(
                     RouteConfig.data,
                     arguments: {
-                      "languageDirectionEnum": widget.languageDirectionEnum,
+                      "languageEnum": widget.languageEnum,
                     },
                   ),
                 ),

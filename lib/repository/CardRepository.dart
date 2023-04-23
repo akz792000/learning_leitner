@@ -45,13 +45,25 @@ class CardRepository {
     return box.values.toList();
   }
 
-  List findAllByCountry(LanguageDirectionEnum countryEnum) {
+  List findAllByCountry(LanguageEnum countryEnum) {
     var box = Hive.box(boxId);
     test(element) {
-      if (countryEnum == LanguageDirectionEnum.en) {
+      if (countryEnum == LanguageEnum.en) {
         return element.fa != "" && element.en != "";
       } else {
         return element.de != "" && element.en != "";
+      }
+    }
+    return box.values.where((element) => test(element)).toList();
+  }
+
+  List findAllByLevelAndCountry(int level, LanguageEnum countryEnum) {
+    var box = Hive.box(boxId);
+    test(element) {
+      if (countryEnum == LanguageEnum.en) {
+        return element.level == level && element.fa != "" && element.en != "";
+      } else {
+        return element.level == level && element.de != "" && element.en != "";
       }
     }
     return box.values.where((element) => test(element)).toList();
@@ -67,8 +79,29 @@ class CardRepository {
         .toList();
   }
 
-  List findAllByLeitner(LanguageDirectionEnum countryEnum) {
-    var elements = findAllByCountry(countryEnum);
+  Map<int, int> findAllLevelBasedByLanguage(LanguageEnum languageEnum) {
+    var elements = findAllByCountry(languageEnum);
+
+    // categorize based on the group level
+    Map<int, int> groupLevel = {};
+    for (var element in elements) {
+      var val = groupLevel[element.level] ?? 0;
+      groupLevel[element.level] = val + 1;
+    }
+
+    // descending sort based on the group level
+    var sortedKeys = ListUtil.sortDesc(groupLevel.keys.toList());
+
+    // prepare result
+    Map<int, int> result = {};
+    for (var key in sortedKeys) {
+      result[key] = groupLevel[key]!;
+    }
+    return result;
+  }
+
+  List findAllBaseOnLeitner(LanguageEnum languageEnum) {
+    var elements = findAllByCountry(languageEnum);
 
     // group based on group level
     Map<int, dynamic> groupLevel = {};
@@ -117,24 +150,4 @@ class CardRepository {
     return result;
   }
 
-  Map<int, int> findAllByCountryAndLevel(LanguageDirectionEnum countryEnum) {
-    var elements = findAllByCountry(countryEnum);
-
-    // categorize based on the group level
-    Map<int, int> groupLevel = {};
-    for (var element in elements) {
-      var val = groupLevel[element.level] ?? 0;
-      groupLevel[element.level] = val + 1;
-    }
-
-    // descending sort based on the group level
-    var sortedKeys = ListUtil.sortDesc(groupLevel.keys.toList());
-
-    // prepare result
-    Map<int, int> result = {};
-    for (var key in sortedKeys) {
-      result[key] = groupLevel[key]!;
-    }
-    return result;
-  }
 }

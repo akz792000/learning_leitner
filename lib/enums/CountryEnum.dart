@@ -1,12 +1,12 @@
 import 'dart:ui';
 
-enum LanguageDirectionEnum {
+enum LanguageEnum {
   fa,
   en,
   de;
 
   TextDirection getDirection() {
-    return this == LanguageDirectionEnum.fa ? TextDirection.rtl : TextDirection.ltr;
+    return this == LanguageEnum.fa ? TextDirection.rtl : TextDirection.ltr;
   }
 
   String getLanguage() {
