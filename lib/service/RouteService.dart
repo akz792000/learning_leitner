@@ -16,4 +16,9 @@ class RouteService {
   void pop() {
     navigatorKey.currentState!.pop();
   }
+
+  getCurrentState() {
+    return navigatorKey.currentState!;
+  }
+
 }

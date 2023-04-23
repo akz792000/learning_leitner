@@ -51,7 +51,8 @@ class _LevelViewState extends State<LevelView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text("${widget.languageDirectionEnum.getLanguage()} Level Cards: $_count"),
+          title: Text(
+              "${widget.languageDirectionEnum.getLanguage()} Level Cards: $_count"),
           leading: InkWell(
             child: const Icon(Icons.arrow_back_ios),
             onTap: () {
@@ -113,7 +114,9 @@ class _LevelViewState extends State<LevelView> {
               onPressed: () async =>
                   await Get.find<RouteService>().pushReplacementNamed(
                 RouteConfig.leitner,
-                arguments: widget.languageDirectionEnum,
+                arguments: {
+                  "languageDirectionEnum": widget.languageDirectionEnum,
+                },
               ),
             ),
       bottomNavigationBar: BottomAppBar(
@@ -134,7 +137,9 @@ class _LevelViewState extends State<LevelView> {
                   onPressed: () async =>
                       await Get.find<RouteService>().pushReplacementNamed(
                     RouteConfig.data,
-                    arguments: widget.languageDirectionEnum,
+                    arguments: {
+                      "languageDirectionEnum": widget.languageDirectionEnum,
+                    },
                   ),
                 ),
               ),

@@ -28,7 +28,8 @@ class _DataViewState extends State<DataView> {
   void _initialize() {
     debugPrint("DataView initialize");
     setState(() {
-      _cardEntities = _cardRepository.findAllByCountry(widget.languageDirectionEnum);
+      _cardEntities =
+          _cardRepository.findAllByCountry(widget.languageDirectionEnum);
     });
   }
 
@@ -73,13 +74,17 @@ class _DataViewState extends State<DataView> {
     debugPrint("Home build");
     return Scaffold(
       appBar: AppBar(
-        title: Text("${widget.languageDirectionEnum.getLanguage()} Data Cards: ${_cardEntities.length}"),
+        title: Text(
+            "${widget.languageDirectionEnum.getLanguage()} Data Cards: ${_cardEntities.length}"),
         leading: InkWell(
             child: const Icon(Icons.arrow_back_ios),
-            onTap: () async => await Get.find<RouteService>().pushReplacementNamed(
-              RouteConfig.level,
-              arguments: widget.languageDirectionEnum,
-            )),
+            onTap: () async =>
+                await Get.find<RouteService>().pushReplacementNamed(
+                  RouteConfig.level,
+                  arguments: {
+                    "languageDirectionEnum": widget.languageDirectionEnum,
+                  },
+                )),
       ),
       body: ValueListenableBuilder<List>(
         valueListenable: ListNotifierHelper(_cardEntities),
@@ -98,9 +103,9 @@ class _DataViewState extends State<DataView> {
                   color: (index % 2 == 0) ? Colors.white : Colors.blue[100],
                   child: InkWell(
                     onTap: () async => await Get.find<RouteService>()
-                        .pushNamed(RouteConfig.merge,
-                            arguments: cardEntity)
-                        .then((value) => _initialize()),
+                        .pushNamed(RouteConfig.merge, arguments: {
+                      "cardEntity": cardEntity,
+                    }).then((value) => _initialize()),
                     child: ListTile(
                       title: Text(cardEntity.en),
                       subtitle: Text(

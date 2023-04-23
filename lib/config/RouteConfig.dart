@@ -25,26 +25,27 @@ class RouteConfig {
   static const String loading = "/loading";
 
   Route generateRoute(RouteSettings settings) {
+    Map? args = settings.arguments != null ? settings.arguments as Map : null;
     switch (settings.name) {
       case home:
         return _buildRoute(const HomeView());
       case level:
         return _buildRoute(LevelView(
-          languageDirectionEnum: settings.arguments as LanguageDirectionEnum,
+          languageDirectionEnum: args!["languageDirectionEnum"],
         ));
       case data:
         return _buildRoute(DataView(
-          languageDirectionEnum: settings.arguments as LanguageDirectionEnum,
+          languageDirectionEnum: args!["languageDirectionEnum"],
         ));
       case leitner:
         return _buildRoute(LeitnerView(
-          languageDirectionEnum: settings.arguments as LanguageDirectionEnum,
+          languageDirectionEnum: args!["languageDirectionEnum"],
         ));
       case persist:
         return _buildRoute(const PersistView());
       case merge:
         return _buildRoute(MergeView(
-          cardEntity: settings.arguments as CardEntity,
+          cardEntity: args!["cardEntity"],
         ));
       case download:
         return _buildRoute(const DownloadView());

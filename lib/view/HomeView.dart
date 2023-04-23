@@ -9,8 +9,8 @@ import 'widget/DrawerWidget.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   createState() => _HomeViewState();
@@ -20,25 +20,31 @@ class _HomeViewState extends State<HomeView> {
   int _selectedOption = 0;
   final _optionModels = [
     OptionModel(
-      image: Image.asset('assets/flags/en.png'),
-      title: 'English',
-      subtitle: 'Learn english sentences.',
-      onTap: () async => await Get.find<RouteService>()
-          .pushNamed(RouteConfig.level, arguments: LanguageDirectionEnum.en),
-    ),
+        image: Image.asset('assets/flags/en.png'),
+        title: 'English',
+        subtitle: 'Learn english sentences.',
+        onTap: () async => await Get.find<RouteService>().pushNamed(
+              RouteConfig.level,
+              arguments: {
+                "languageDirectionEnum": LanguageDirectionEnum.en,
+              },
+            )),
     OptionModel(
-      image: Image.asset('assets/flags/de.png'),
-      title: 'Deutsch',
-      subtitle: 'Englische Sätze lernen.',
-      onTap: () async => await Get.find<RouteService>()
-          .pushNamed(RouteConfig.level, arguments: LanguageDirectionEnum.de),
-    ),
+        image: Image.asset('assets/flags/de.png'),
+        title: 'Deutsch',
+        subtitle: 'Englische Sätze lernen.',
+        onTap: () async => await Get.find<RouteService>().pushNamed(
+              RouteConfig.level,
+              arguments: {
+                "languageDirectionEnum": LanguageDirectionEnum.de,
+              },
+            )),
     OptionModel(
       image: Image.asset('assets/database.png'),
       title: 'Download',
       subtitle: 'Download sentences',
-      onTap: () async => await Get.find<RouteService>()
-          .pushNamed(RouteConfig.download),
+      onTap: () async =>
+          await Get.find<RouteService>().pushNamed(RouteConfig.download),
     ),
   ];
 

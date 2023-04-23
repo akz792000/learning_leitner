@@ -208,9 +208,12 @@ class _LeitnerViewState extends State<LeitnerView> {
         centerTitle: true,
         leading: InkWell(
             child: const Icon(Icons.arrow_back_ios),
-            onTap: () async => await Get.find<RouteService>().pushReplacementNamed(
+            onTap: () async =>
+                await Get.find<RouteService>().pushReplacementNamed(
                   RouteConfig.level,
-                  arguments: widget.languageDirectionEnum,
+                  arguments: {
+                    "languageDirectionEnum": widget.languageDirectionEnum,
+                  },
                 )),
       ),
       body: GestureDetector(
