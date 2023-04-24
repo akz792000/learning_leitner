@@ -16,7 +16,7 @@ class DownloadView extends StatefulWidget {
 }
 
 class _DownloadViewState extends State<DownloadView> {
-  final _cardRepository = CardRepository();
+  final CardRepository _cardRepository = Get.find<CardRepository>();
   final List<Map<String, dynamic>> _items = [
     {"name": "File_0", "toggle": false},
     {"name": "File_1", "toggle": false},
@@ -30,7 +30,7 @@ class _DownloadViewState extends State<DownloadView> {
       id: element["id"],
       created: DateTimeUtil.now(),
       modified: DateTimeUtil.now(),
-      level: CardEntity.newbieLevel,
+      level: CardEntity.initLevel,
       subLevel: CardEntity.initSubLevel,
       order: 0,
       fa: element["fa"] ?? "",

@@ -20,7 +20,7 @@ class LevelView extends StatefulWidget {
 }
 
 class _LevelViewState extends State<LevelView> {
-  final _cardRepository = CardRepository();
+  final CardRepository _cardRepository = Get.find<CardRepository>();
   late int _count;
   int _selectedOption = 0;
   final List<OptionModel> _optionModels = [];

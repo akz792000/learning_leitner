@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:learning_leitner/entity/CardEntity.dart';
 import 'package:learning_leitner/util/DateTimeUtil.dart';
 
@@ -14,7 +15,7 @@ class PersistView extends StatefulWidget {
 }
 
 class _PersistViewState extends State<PersistView> {
-  final _cardRepository = CardRepository();
+  final CardRepository _cardRepository = Get.find<CardRepository>();
   final _faController = TextEditingController();
   final _enController = TextEditingController();
   final _deController = TextEditingController();
@@ -34,7 +35,7 @@ class _PersistViewState extends State<PersistView> {
         id: 0,
         created: DateTimeUtil.now(),
         modified: DateTimeUtil.now(),
-        level: CardEntity.newbieLevel,
+        level: CardEntity.initLevel,
         subLevel: CardEntity.initSubLevel,
         order: 0,
         fa: _faController.text,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:learning_leitner/entity/CardEntity.dart';
 import 'package:learning_leitner/repository/CardRepository.dart';
 import 'package:learning_leitner/util/DateTimeUtil.dart';
@@ -18,7 +19,7 @@ class MergeView extends StatefulWidget {
 }
 
 class _MergeViewState extends State<MergeView> {
-  final _cardRepository = CardRepository();
+  final CardRepository _cardRepository = Get.find<CardRepository>();
   final _formKey = GlobalKey<FormState>();
 
   late final TextEditingController _idController;
@@ -62,7 +63,7 @@ class _MergeViewState extends State<MergeView> {
         id: int.parse(_idController.text),
         created: _created,
         modified: DateTimeUtil.now(),
-        level: CardEntity.newbieLevel,
+        level: CardEntity.initLevel,
         subLevel: CardEntity.initSubLevel,
         order: int.parse(_orderController.text),
         fa: _faController.text,

@@ -22,7 +22,7 @@ class DataView extends StatefulWidget {
 }
 
 class _DataViewState extends State<DataView> {
-  final _cardRepository = CardRepository();
+  final CardRepository _cardRepository = Get.find<CardRepository>();
   late List _cardEntities;
 
   void _initialize() {

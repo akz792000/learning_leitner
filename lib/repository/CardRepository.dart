@@ -47,26 +47,24 @@ class CardRepository {
 
   List findAllByCountry(LanguageEnum countryEnum) {
     var box = Hive.box(boxId);
-    test(element) {
+    return box.values.where((element) {
       if (countryEnum == LanguageEnum.en) {
         return element.fa != "" && element.en != "";
       } else {
         return element.de != "" && element.en != "";
       }
-    }
-    return box.values.where((element) => test(element)).toList();
+    }).toList();
   }
 
   List findAllByLevelAndCountry(int level, LanguageEnum countryEnum) {
     var box = Hive.box(boxId);
-    test(element) {
+    return box.values.where((element) {
       if (countryEnum == LanguageEnum.en) {
         return element.level == level && element.fa != "" && element.en != "";
       } else {
         return element.level == level && element.de != "" && element.en != "";
       }
-    }
-    return box.values.where((element) => test(element)).toList();
+    }).toList();
   }
 
   List findAllByDateDifference() {
@@ -100,7 +98,7 @@ class CardRepository {
     return result;
   }
 
-  List findAllBaseOnLeitner(LanguageEnum languageEnum) {
+  List findAllBasedOnLeitner(LanguageEnum languageEnum) {
     var elements = findAllByCountry(languageEnum);
 
     // group based on group level
@@ -118,7 +116,7 @@ class CardRepository {
     for (var key in sortedKeys) {
       var addedItems = [];
       var items = groupLevel[key];
-      if (key == CardEntity.newbieLevel) {
+      if (key == CardEntity.initLevel) {
         addedItems.addAll(items);
       } else {
         /**
@@ -129,12 +127,10 @@ class CardRepository {
         var maxSubLevelCount = pow(2, key - 1);
         for (var item in items) {
           if (DateTimeUtil.daysToNow(item.modified) >= maxSubLevelCount) {
-            if (item.subLevel == maxSubLevelCount) {
-              addedItems.add(item);
+            if (item.subLevel < maxSubLevelCount) {
+              item.subLevel++;
             } else {
-              if (item.subLevel < maxSubLevelCount) {
-                item.subLevel++;
-              }
+              addedItems.add(item);
             }
           }
         }
@@ -149,5 +145,4 @@ class CardRepository {
     }
     return result;
   }
-
 }

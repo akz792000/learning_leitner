@@ -3,13 +3,13 @@ import 'package:get/get.dart';
 import 'package:learning_leitner/entity/CardEntity.dart';
 import 'package:learning_leitner/util/ColorUtil.dart';
 import 'package:learning_leitner/repository/CardRepository.dart';
+import 'package:learning_leitner/view/widget/IconButtonWidget.dart';
 
 import '../config/RouteConfig.dart';
 import '../enums/CountryEnum.dart';
 import '../service/RouteService.dart';
 import '../util/DateTimeUtil.dart';
 import '../util/DialogUtil.dart';
-import '../widget/IconButtonWidget.dart';
 
 class LeitnerView extends StatefulWidget {
   final LanguageEnum languageEnum;
@@ -26,7 +26,7 @@ class LeitnerView extends StatefulWidget {
 }
 
 class _LeitnerViewState extends State<LeitnerView> {
-  final _cardRepository = CardRepository();
+  final _cardRepository = Get.find<CardRepository>();
   final PageController _pageController = PageController(
     initialPage: 0,
     keepPage: true,
@@ -48,7 +48,7 @@ class _LeitnerViewState extends State<LeitnerView> {
       _languageEnum = LanguageEnum.en;
     }
     _cards = widget.level == -1
-        ? _cardRepository.findAllBaseOnLeitner(widget.languageEnum)
+        ? _cardRepository.findAllBasedOnLeitner(widget.languageEnum)
         : _cardRepository.findAllByLevelAndCountry(
             widget.level, widget.languageEnum);
     if (_cards.isNotEmpty) {
@@ -148,7 +148,7 @@ class _LeitnerViewState extends State<LeitnerView> {
           onPressed: _cardEntity.levelChanged == 'DOWN'
               ? null
               : () => _changePage(
-                    CardEntity.newbieLevel,
+                    CardEntity.initLevel,
                     'DOWN',
                   ),
           key: const ValueKey("dislike")),

@@ -5,8 +5,7 @@ part 'CardEntity.g.dart';
 
 @HiveType(typeId: 1)
 class CardEntity {
-  static const int newbieLevel = 0;
-  static const int initLevel = 1;
+  static const int initLevel = 0;
   static const int initSubLevel = 1;
 
   @HiveField(0)
