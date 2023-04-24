@@ -24,6 +24,7 @@ class DateTimeUtil {
 
   static daysToNow(tz.TZDateTime from) {
     var to = tz.TZDateTime.now(tz.local);
-    return (to.difference(from).inHours / 24).round();
+    return to.difference(from).inDays;
   }
+
 }
