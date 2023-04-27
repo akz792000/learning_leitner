@@ -25,7 +25,7 @@ class _DownloadViewState extends State<DownloadView> {
   bool _toggle = false;
   int _selectedIndex = 0;
 
-  Future<int> _persist(Map element) {
+  Future<int> _persist(Map element) async {
     var cardEntity = CardEntity(
       id: element["id"],
       created: DateTimeUtil.now(),
@@ -39,7 +39,7 @@ class _DownloadViewState extends State<DownloadView> {
       de: element["de"] ?? "",
       desc: element["desc"] ?? "",
     );
-    return _cardRepository.merge(cardEntity);
+    return await _cardRepository.merge(cardEntity);
   }
 
   Future<void> _download(Map<String, dynamic> item) async {

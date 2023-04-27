@@ -57,7 +57,7 @@ class _MergeViewState extends State<MergeView> {
     _descController = TextEditingController(text: widget.cardEntity.desc);
   }
 
-  _onMerge() {
+  _onMerge() async {
     if (_formKey.currentState!.validate()) {
       var cardEntity = CardEntity(
         id: int.parse(_idController.text),
@@ -71,7 +71,7 @@ class _MergeViewState extends State<MergeView> {
         de: _deController.text,
         desc: _descController.text,
       );
-      _cardRepository.merge(cardEntity);
+      await _cardRepository.merge(cardEntity);
       Navigator.pop(context);
     }
   }

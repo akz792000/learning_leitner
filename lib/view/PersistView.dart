@@ -43,7 +43,7 @@ class _PersistViewState extends State<PersistView> {
         de: _deController.text,
         desc: _descController.text,
       );
-      _cardRepository.merge(cardEntity);
+      await _cardRepository.merge(cardEntity);
       Navigator.pop(context);
     }
   }

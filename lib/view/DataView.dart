@@ -50,8 +50,8 @@ class _DataViewState extends State<DataView> {
       context,
       "Do you want to delete this item?",
       cardEntity.en,
-      () {
-        _cardRepository.remove(cardEntity);
+      () async {
+        await _cardRepository.remove(cardEntity);
         _initialize();
       },
     );
@@ -65,8 +65,8 @@ class _DataViewState extends State<DataView> {
         context,
         "Alert",
         "Do you want to delete all items?",
-        () {
-          _cardRepository.removeAll();
+        () async {
+          await _cardRepository.removeAll();
           _initialize();
         },
       );

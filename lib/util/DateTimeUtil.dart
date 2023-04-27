@@ -22,9 +22,15 @@ class DateTimeUtil {
     return intl.DateFormat("yyyy-MM-dd HH:mm").format(adjust);
   }
 
-  static daysToNow(tz.TZDateTime from) {
+  static int daysToNow(tz.TZDateTime from) {
     var to = tz.TZDateTime.now(tz.local);
     return to.difference(from).inDays;
   }
 
+  static int daysToNowWithoutTime(tz.TZDateTime from) {
+    var to = tz.TZDateTime.now(tz.local);
+    var utcFrom = tz.TZDateTime.utc(from.year, from.month, from.day);
+    var utcTo = tz.TZDateTime.utc(to.year, to.month, to.day);
+    return utcTo.difference(utcFrom).inDays;
+  }
 }

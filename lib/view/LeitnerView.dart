@@ -70,11 +70,11 @@ class _LeitnerViewState extends State<LeitnerView> {
     }
   }
 
-  void _modifyOrder() {
+  void _modifyOrder() async {
     if (!_cardEntity.orderChanged) {
       _cardEntity.order++;
       _cardEntity.orderChanged = true;
-      _cardRepository.merge(_cardEntity);
+      await _cardRepository.merge(_cardEntity);
     }
   }
 
@@ -96,12 +96,12 @@ class _LeitnerViewState extends State<LeitnerView> {
     _modifyOrder();
   }
 
-  void _changePage(int level, String levelChanged) {
+  void _changePage(int level, String levelChanged) async {
     _cardEntity.level = level;
     _cardEntity.subLevel = CardEntity.initSubLevel;
     _cardEntity.levelChanged = levelChanged;
     _cardEntity.modified = DateTimeUtil.now();
-    _cardRepository.merge(_cardEntity);
+    await _cardRepository.merge(_cardEntity);
     setState(() {
       _level = _cardEntity.level;
     });
