@@ -53,6 +53,7 @@ class _DownloadViewState extends State<DownloadView> {
         CardEntity? cardEntity = _cardRepository.findById(element["id"]);
         if (cardEntity == null ||
             item["toggle"] ||
+            (element["desc"] != null && cardEntity.desc != element["desc"]) ||
             (element["fa"] != null && cardEntity.fa != element["fa"]) ||
             (element["en"] != null && cardEntity.en != element["en"]) ||
             (element["de"] != null && cardEntity.de != element["de"])) {
