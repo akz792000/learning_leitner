@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:learning_leitner/entity/CardEntity.dart';
+import 'package:learning_leitner/service/CardService.dart';
 import 'package:learning_leitner/util/ColorUtil.dart';
 import 'package:learning_leitner/repository/CardRepository.dart';
 import 'package:learning_leitner/view/widget/IconButtonWidget.dart';
@@ -27,6 +28,7 @@ class LeitnerView extends StatefulWidget {
 
 class _LeitnerViewState extends State<LeitnerView> {
   final _cardRepository = Get.find<CardRepository>();
+  final _cardService = Get.find<CardService>();
   final PageController _pageController = PageController(
     initialPage: 0,
     keepPage: true,
@@ -48,7 +50,7 @@ class _LeitnerViewState extends State<LeitnerView> {
       _languageEnum = LanguageEnum.en;
     }
     _cards = widget.level == -1
-        ? _cardRepository.findAllBasedOnLeitner(widget.languageEnum)
+        ? _cardService.findAllBasedOnLeitner(widget.languageEnum)
         : _cardRepository.findAllByLevelAndCountry(
             widget.level, widget.languageEnum);
     if (_cards.isNotEmpty) {
