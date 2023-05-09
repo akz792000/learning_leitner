@@ -57,7 +57,7 @@ class DrawerWidget extends StatelessWidget {
                   context: context,
                   applicationIcon: const FlutterLogo(),
                   applicationName: "Learning Leitner",
-                  applicationVersion: '0.0.2',
+                  applicationVersion: '0.0.3',
                   applicationLegalese: 'Developed by Ali Karimizandi',
                 );
               },
