@@ -66,7 +66,7 @@ class _DataViewState extends State<DataView> {
         "Alert",
         "Do you want to delete all items?",
         () async {
-          await _cardRepository.removeAll();
+          await _cardRepository.removeList(_cardEntities);
           _initialize();
         },
       );

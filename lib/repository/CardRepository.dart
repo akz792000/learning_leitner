@@ -35,6 +35,13 @@ class CardRepository {
     await box.deleteAll(box.keys);
   }
 
+  Future<void> removeList(List cardEntities) async {
+    var box = Hive.box(boxId);
+    for (var element in cardEntities) {
+      await box.delete(element.id);
+    }
+  }
+
   CardEntity? findById(int id) {
     var box = Hive.box(boxId);
     return box.get(id);
