@@ -98,6 +98,6 @@ or
 2. Flat rounded
 3. 256px
 
-## For icon download
+## For icon download emoji
 https://www.flaticon.com/free-icons/emoticons
-1. 256px
+1. 512px

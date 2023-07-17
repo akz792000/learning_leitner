@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:learning_leitner/enums/CountryEnum.dart';
 import 'package:learning_leitner/model/OptionModel.dart';
 import 'package:learning_leitner/repository/CardRepository.dart';
+import 'package:learning_leitner/view/LeitnerView.dart';
 
 import '../config/RouteConfig.dart';
 import '../service/RouteService.dart';
@@ -45,6 +46,53 @@ class _LevelViewState extends State<LevelView> {
   void initState() {
     super.initState();
     initialize();
+  }
+
+  List<Widget> _bottomBar() {
+    var result = [
+      Padding(
+        padding: const EdgeInsets.fromLTRB(0, 4, 8, 4),
+        child: SizedBox(
+          child: TextButton(
+            child: const Icon(
+              Icons.text_snippet_outlined,
+              color: Colors.lightBlue,
+              size: 26,
+            ),
+            onPressed: () async =>
+                await Get.find<RouteService>().pushReplacementNamed(
+              RouteConfig.data,
+              arguments: {
+                "languageEnum": widget.languageEnum,
+              },
+            ),
+          ),
+        ),
+      )
+    ];
+    if (_count != 0) {
+      result.add(Padding(
+        padding: const EdgeInsets.fromLTRB(0, 4, 8, 4),
+        child: SizedBox(
+          child: TextButton(
+            child: const Icon(
+              Icons.play_circle,
+              color: Colors.lightBlue,
+              size: 26,
+            ),
+            onPressed: () async =>
+                await Get.find<RouteService>().pushReplacementNamed(
+              RouteConfig.leitner,
+              arguments: {
+                "languageEnum": widget.languageEnum,
+                "level": LeitnerView.allLimitedLevel,
+              },
+            ),
+          ),
+        ),
+      ));
+    }
+    return result;
   }
 
   @override
@@ -129,7 +177,7 @@ class _LevelViewState extends State<LevelView> {
                 RouteConfig.leitner,
                 arguments: {
                   "languageEnum": widget.languageEnum,
-                  "level": -1,
+                  "level": LeitnerView.allLevel,
                 },
               ),
             ),
@@ -138,27 +186,7 @@ class _LevelViewState extends State<LevelView> {
         notchMargin: 8.0,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 4, 8, 4),
-              child: SizedBox(
-                child: TextButton(
-                  child: const Icon(
-                    Icons.text_snippet_outlined,
-                    color: Colors.lightBlue,
-                    size: 26,
-                  ),
-                  onPressed: () async =>
-                      await Get.find<RouteService>().pushReplacementNamed(
-                    RouteConfig.data,
-                    arguments: {
-                      "languageEnum": widget.languageEnum,
-                    },
-                  ),
-                ),
-              ),
-            ),
-          ],
+          children: _bottomBar(),
         ),
       ),
     );

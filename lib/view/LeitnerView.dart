@@ -13,6 +13,9 @@ import '../util/DateTimeUtil.dart';
 import '../util/DialogUtil.dart';
 
 class LeitnerView extends StatefulWidget {
+  static const int allLevel = -1;
+  static const int allLimitedLevel = -2;
+
   final LanguageEnum languageEnum;
   final int level;
 
@@ -49,10 +52,18 @@ class _LeitnerViewState extends State<LeitnerView> {
     } else {
       _languageEnum = LanguageEnum.en;
     }
-    _cards = widget.level == -1
-        ? _cardService.findAllBasedOnLeitner(widget.languageEnum)
-        : _cardRepository.findAllByLevelAndCountry(
+    switch (widget.level) {
+      case LeitnerView.allLevel:
+        _cards = _cardService.findAllBasedOnLeitner(widget.languageEnum);
+        break;
+      case LeitnerView.allLimitedLevel:
+        _cards = _cardRepository.findAllByCountry(widget.languageEnum);
+        break;
+      default:
+        _cards = _cardRepository.findAllByLevelAndCountry(
             widget.level, widget.languageEnum);
+        break;
+    }
     if (_cards.isNotEmpty) {
       _cardEntity = _cards.elementAt(0);
       _cardEntity.levelChanged = null;
@@ -198,7 +209,7 @@ class _LeitnerViewState extends State<LeitnerView> {
     result.removeWhere((element) {
       var keyValue = (element.key as ValueKey).value;
       return (keyValue == 'desc' && _cardEntity.desc == "") ||
-          ((keyValue == 'like' || keyValue == 'dislike') && widget.level != -1);
+          (keyValue == 'like' && widget.level != LeitnerView.allLevel);
     });
 
     return result;
