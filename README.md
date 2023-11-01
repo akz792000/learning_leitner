@@ -18,6 +18,9 @@ samples, guidance on mobile development, and a full API reference.
 ## check the size of your partitions on mac
 diskutil list
 
+## upgrade all packages
+brew upgrade 
+
 ## install android sdk
 brew install --cask android-SDK
 
