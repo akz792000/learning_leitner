@@ -62,7 +62,7 @@ class CardRepository {
   List findAllByLevelAndGroupCode(int level, GroupCode groupCode) {
     var box = Hive.box(boxId);
     return box.values.where((element) {
-      return element.level == level && element.groupCode;
+      return element.level == level && element.groupCode == groupCode;
     }).toList();
   }
 
