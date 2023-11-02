@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:learning_leitner/enums/CountryEnum.dart';
+import 'package:learning_leitner/enums/GroupCode.dart';
 import 'package:learning_leitner/util/DateTimeUtil.dart';
 
 import '../entity/CardEntity.dart';
@@ -52,25 +52,17 @@ class CardRepository {
     return box.values.toList();
   }
 
-  List findAllByCountry(LanguageEnum countryEnum) {
+  List findAllByGroupCode(GroupCode groupCode) {
     var box = Hive.box(boxId);
     return box.values.where((element) {
-      if (countryEnum == LanguageEnum.en) {
-        return element.fa != "" && element.en != "";
-      } else {
-        return element.de != "" && element.en != "";
-      }
+      return element.groupCode == groupCode;
     }).toList();
   }
 
-  List findAllByLevelAndCountry(int level, LanguageEnum countryEnum) {
+  List findAllByLevelAndGroupCode(int level, GroupCode groupCode) {
     var box = Hive.box(boxId);
     return box.values.where((element) {
-      if (countryEnum == LanguageEnum.en) {
-        return element.level == level && element.fa != "" && element.en != "";
-      } else {
-        return element.level == level && element.de != "" && element.en != "";
-      }
+      return element.level == level && element.groupCode;
     }).toList();
   }
 
@@ -84,8 +76,8 @@ class CardRepository {
         .toList();
   }
 
-  Map<int, int> findAllLevelBasedByLanguage(LanguageEnum languageEnum) {
-    var elements = findAllByCountry(languageEnum);
+  Map<int, int> findAllLevelBasedByGroupCode(GroupCode groupCode) {
+    var elements = findAllByGroupCode(groupCode);
 
     // categorize based on the group level
     Map<int, int> groupLevel = {};

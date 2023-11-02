@@ -4,17 +4,17 @@ import 'package:learning_leitner/repository/CardRepository.dart';
 
 import '../config/RouteConfig.dart';
 import '../entity/CardEntity.dart';
-import '../enums/CountryEnum.dart';
+import '../enums/GroupCode.dart';
 import '../helper/ListNotifierHelper.dart';
 import '../service/RouteService.dart';
 import '../util/DialogUtil.dart';
 
 class DataView extends StatefulWidget {
-  final LanguageEnum languageEnum;
+  final GroupCode groupCode;
 
   const DataView({
     Key? key,
-    required this.languageEnum,
+    required this.groupCode,
   }) : super(key: key);
 
   @override
@@ -28,8 +28,7 @@ class _DataViewState extends State<DataView> {
   void _initialize() {
     debugPrint("DataView initialize");
     setState(() {
-      _cardEntities =
-          _cardRepository.findAllByCountry(widget.languageEnum);
+      _cardEntities = _cardRepository.findAllByGroupCode(widget.groupCode);
     });
   }
 
@@ -79,14 +78,14 @@ class _DataViewState extends State<DataView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            "${widget.languageEnum.getLanguage()} Data Cards: ${_cardEntities.length}"),
+            "${widget.groupCode.getTitle()} Data Cards: ${_cardEntities.length}"),
         leading: InkWell(
             child: const Icon(Icons.arrow_back_ios),
             onTap: () async =>
                 await Get.find<RouteService>().pushReplacementNamed(
                   RouteConfig.level,
                   arguments: {
-                    "languageEnum": widget.languageEnum,
+                    "groupCode": widget.groupCode,
                   },
                 )),
       ),
@@ -132,9 +131,12 @@ class _DataViewState extends State<DataView> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         heroTag: 'Add',
-        onPressed: () async => await Get.find<RouteService>()
-            .pushNamed(RouteConfig.persist)
-            .then((value) => _initialize()),
+        onPressed: () async => await Get.find<RouteService>().pushNamed(
+          RouteConfig.persist,
+          arguments: {
+            "groupCode": widget.groupCode,
+          },
+        ).then((value) => _initialize()),
         child: const Icon(Icons.add),
       ),
       bottomNavigationBar: BottomAppBar(

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:learning_leitner/entity/CardEntity.dart';
+import 'package:learning_leitner/enums/GroupCode.dart';
 import '../config/RouteConfig.dart';
 import '../repository/CardRepository.dart';
 import '../service/RouteService.dart';
@@ -28,18 +29,18 @@ class _DownloadViewState extends State<DownloadView> {
 
   Future<int> _persist(Map element) async {
     var cardEntity = CardEntity(
-      id: element["id"],
-      created: DateTimeUtil.now(),
-      modified: DateTimeUtil.now(),
-      level: CardEntity.initLevel,
-      subLevel: CardEntity.initSubLevel,
-      order: 0,
-      fa: element["fa"] ?? "",
-      en: element["en"],
-      // can be null
-      de: element["de"] ?? "",
-      desc: element["desc"] ?? "",
-    );
+        id: element["id"],
+        created: DateTimeUtil.now(),
+        modified: DateTimeUtil.now(),
+        level: CardEntity.initLevel,
+        subLevel: CardEntity.initSubLevel,
+        order: 0,
+        fa: element["fa"] ?? "",
+        en: element["en"],
+        // can be null
+        de: element["de"] ?? "",
+        desc: element["desc"] ?? "",
+        groupCode: GroupCode.values[element["groupCode"] ?? GroupCode.english.index]);
     return await _cardRepository.merge(cardEntity);
   }
 

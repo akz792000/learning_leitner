@@ -7,7 +7,8 @@ import 'package:learning_leitner/repository/CardRepository.dart';
 import 'package:learning_leitner/view/widget/IconButtonWidget.dart';
 
 import '../config/RouteConfig.dart';
-import '../enums/CountryEnum.dart';
+import '../enums/LanguageCode.dart';
+import '../enums/GroupCode.dart';
 import '../service/RouteService.dart';
 import '../util/DateTimeUtil.dart';
 import '../util/DialogUtil.dart';
@@ -16,12 +17,12 @@ class LeitnerView extends StatefulWidget {
   static const int allLevel = -1;
   static const int allLimitedLevel = -2;
 
-  final LanguageEnum languageEnum;
+  final GroupCode groupCode;
   final int level;
 
   const LeitnerView({
     Key? key,
-    required this.languageEnum,
+    required this.groupCode,
     required this.level,
   }) : super(key: key);
 
@@ -42,26 +43,31 @@ class _LeitnerViewState extends State<LeitnerView> {
 
   int _index = 0;
   int _level = 1;
-  late LanguageEnum _languageEnum;
+  late LanguageCode _languageCode;
+
+  LanguageCode _getInitialLanguageCode() {
+    switch (widget.groupCode) {
+      case GroupCode.english:
+        return LanguageCode.fa;
+      case GroupCode.deutsch:
+        return LanguageCode.en;
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    if (widget.languageEnum == LanguageEnum.en) {
-      _languageEnum = LanguageEnum.fa;
-    } else {
-      _languageEnum = LanguageEnum.en;
-    }
+    _languageCode = _getInitialLanguageCode();
     switch (widget.level) {
       case LeitnerView.allLevel:
-        _cards = _cardService.findAllBasedOnLeitner(widget.languageEnum);
+        _cards = _cardService.findAllBasedOnLeitner(widget.groupCode);
         break;
       case LeitnerView.allLimitedLevel:
-        _cards = _cardRepository.findAllByCountry(widget.languageEnum);
+        _cards = _cardRepository.findAllByGroupCode(widget.groupCode);
         break;
       default:
-        _cards = _cardRepository.findAllByLevelAndCountry(
-            widget.level, widget.languageEnum);
+        _cards = _cardRepository.findAllByLevelAndGroupCode(
+            widget.level, widget.groupCode);
         break;
     }
     if (_cards.isNotEmpty) {
@@ -91,21 +97,17 @@ class _LeitnerViewState extends State<LeitnerView> {
     }
   }
 
-  void _changeValue(int index, LanguageEnum language) {
+  void _changeValue(int index, LanguageCode languageCode) {
     setState(() {
       _cardEntity = _cards.elementAt(index);
-      _languageEnum = language;
+      _languageCode = languageCode;
       _level = _cardEntity.level;
     });
   }
 
   void _onPageChanged(value) {
     _index = value;
-    _changeValue(
-        _index,
-        widget.languageEnum == LanguageEnum.en
-            ? LanguageEnum.fa
-            : LanguageEnum.en);
+    _changeValue(_index, _getInitialLanguageCode());
     _modifyOrder();
   }
 
@@ -124,23 +126,26 @@ class _LeitnerViewState extends State<LeitnerView> {
     }
   }
 
+  /*
+   * details.primaryVelocity! > 0 ==> UP
+   * details.primaryVelocity! < 0 ==> DOWN
+   */
   void _onVerticalDragEnd(DragEndDetails details) {
-    if (widget.languageEnum == LanguageEnum.en) {
-      if (_languageEnum != LanguageEnum.en) {
-        // details.primaryVelocity! > 0 ==> UP
-        _changeValue(_index, LanguageEnum.en);
-      } else if (_languageEnum != LanguageEnum.fa) {
-        // details.primaryVelocity! < 0 ==> DOWN
-        _changeValue(_index, LanguageEnum.fa);
-      }
-    } else {
-      if (_languageEnum != LanguageEnum.de) {
-        // details.primaryVelocity! > 0 ==> UP
-        _changeValue(_index, LanguageEnum.de);
-      } else if (_languageEnum != LanguageEnum.en) {
-        // details.primaryVelocity! < 0 ==> DOWN
-        _changeValue(_index, LanguageEnum.en);
-      }
+    switch (widget.groupCode) {
+      case GroupCode.english:
+        if (_languageCode != LanguageCode.en) {
+          _changeValue(_index, LanguageCode.en);
+        } else {
+          _changeValue(_index, LanguageCode.fa);
+        }
+        break;
+      case GroupCode.deutsch:
+        if (_languageCode != LanguageCode.de) {
+          _changeValue(_index, LanguageCode.de);
+        } else {
+          _changeValue(_index, LanguageCode.en);
+        }
+        break;
     }
   }
 
@@ -216,9 +221,12 @@ class _LeitnerViewState extends State<LeitnerView> {
   }
 
   String _getText() {
-    return widget.languageEnum == LanguageEnum.en
-        ? (_languageEnum == LanguageEnum.fa ? _cardEntity.fa : _cardEntity.en)
-        : (_languageEnum == LanguageEnum.en ? _cardEntity.en : _cardEntity.de);
+    switch (widget.groupCode) {
+      case GroupCode.english:
+        return _languageCode == LanguageCode.fa ? _cardEntity.fa : _cardEntity.en;
+      case GroupCode.deutsch:
+        return _languageCode == LanguageCode.en ? _cardEntity.en : _cardEntity.de;
+    }
   }
 
   @override
@@ -233,7 +241,7 @@ class _LeitnerViewState extends State<LeitnerView> {
                 await Get.find<RouteService>().pushReplacementNamed(
                   RouteConfig.level,
                   arguments: {
-                    "languageEnum": widget.languageEnum,
+                    "groupCode": widget.groupCode,
                   },
                 )),
       ),
@@ -272,7 +280,7 @@ class _LeitnerViewState extends State<LeitnerView> {
                         children: [
                           CircleAvatar(
                             backgroundImage: Image.asset(
-                                    'assets/flags/${_languageEnum.name}.png')
+                                    'assets/flags/${_languageCode.name}.png')
                                 .image,
                           ),
                         ],
@@ -289,7 +297,7 @@ class _LeitnerViewState extends State<LeitnerView> {
                             child: Center(
                               child: Text(
                                 _getText(),
-                                textDirection: _languageEnum.getDirection(),
+                                textDirection: _languageCode.getDirection(),
                                 style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 30.0,

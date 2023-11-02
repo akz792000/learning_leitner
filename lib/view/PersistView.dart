@@ -3,11 +3,15 @@ import 'package:get/get.dart';
 import 'package:learning_leitner/entity/CardEntity.dart';
 import 'package:learning_leitner/util/DateTimeUtil.dart';
 
+import '../enums/GroupCode.dart';
 import '../repository/CardRepository.dart';
 
 class PersistView extends StatefulWidget {
+  final GroupCode groupCode;
+
   const PersistView({
     Key? key,
+    required this.groupCode,
   }) : super(key: key);
 
   @override
@@ -32,17 +36,17 @@ class _PersistViewState extends State<PersistView> {
   void _onPersist() async {
     if (_formKey.currentState!.validate()) {
       var cardEntity = CardEntity(
-        id: 0,
-        created: DateTimeUtil.now(),
-        modified: DateTimeUtil.now(),
-        level: CardEntity.initLevel,
-        subLevel: CardEntity.initSubLevel,
-        order: 0,
-        fa: _faController.text,
-        en: _enController.text,
-        de: _deController.text,
-        desc: _descController.text,
-      );
+          id: 0,
+          created: DateTimeUtil.now(),
+          modified: DateTimeUtil.now(),
+          level: CardEntity.initLevel,
+          subLevel: CardEntity.initSubLevel,
+          order: 0,
+          fa: _faController.text,
+          en: _enController.text,
+          de: _deController.text,
+          desc: _descController.text,
+          groupCode: widget.groupCode);
       await _cardRepository.merge(cardEntity);
       Navigator.pop(context);
     }

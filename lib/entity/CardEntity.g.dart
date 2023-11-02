@@ -50,13 +50,16 @@ class CardEntityAdapter extends TypeAdapter<CardEntity> {
 
       // desc
       desc: (fields[9] ?? "") as String,
+
+      // groupCode
+      groupCode: GroupCode.values[fields[10] ?? GroupCode.english.index],
     );
   }
 
   @override
   void write(BinaryWriter writer, CardEntity obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(11)
 
       // id
       ..writeByte(0)
@@ -96,7 +99,11 @@ class CardEntityAdapter extends TypeAdapter<CardEntity> {
 
       // desc
       ..writeByte(9)
-      ..write(obj.desc);
+      ..write(obj.desc)
+
+      // groupCode
+      ..writeByte(10)
+      ..write(obj.groupCode.index);
   }
 
   @override

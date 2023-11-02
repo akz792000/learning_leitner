@@ -1,9 +1,7 @@
 import 'dart:math';
 
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:learning_leitner/enums/CountryEnum.dart';
+import 'package:learning_leitner/enums/GroupCode.dart';
 import 'package:learning_leitner/util/DateTimeUtil.dart';
 
 import '../entity/CardEntity.dart';
@@ -11,11 +9,10 @@ import '../repository/CardRepository.dart';
 import '../util/ListUtil.dart';
 
 class CardService {
-
   final CardRepository _cardRepository = Get.find<CardRepository>();
 
-  List findAllBasedOnLeitner(LanguageEnum languageEnum) {
-    var elements = _cardRepository.findAllByCountry(languageEnum);
+  List findAllBasedOnLeitner(GroupCode groupCode) {
+    var elements = _cardRepository.findAllByGroupCode(groupCode);
 
     // group based on group level
     Map<int, dynamic> groupLevel = {};

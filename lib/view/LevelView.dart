@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:learning_leitner/enums/CountryEnum.dart';
+import 'package:learning_leitner/enums/GroupCode.dart';
 import 'package:learning_leitner/model/OptionModel.dart';
 import 'package:learning_leitner/repository/CardRepository.dart';
 import 'package:learning_leitner/view/LeitnerView.dart';
@@ -9,11 +9,11 @@ import '../config/RouteConfig.dart';
 import '../service/RouteService.dart';
 
 class LevelView extends StatefulWidget {
-  final LanguageEnum languageEnum;
+  final GroupCode groupCode;
 
   const LevelView({
     Key? key,
-    required this.languageEnum,
+    required this.groupCode,
   }) : super(key: key);
 
   @override
@@ -28,9 +28,9 @@ class _LevelViewState extends State<LevelView> {
 
   void initialize() {
     setState(() {
-      _count = _cardRepository.findAllByCountry(widget.languageEnum).length;
+      _count = _cardRepository.findAllByGroupCode(widget.groupCode).length;
       _cardRepository
-          .findAllLevelBasedByLanguage(widget.languageEnum)
+          .findAllLevelBasedByGroupCode(widget.groupCode)
           .forEach((key, value) {
         _optionModels.add(OptionModel(
           level: key,
@@ -63,7 +63,7 @@ class _LevelViewState extends State<LevelView> {
                 await Get.find<RouteService>().pushReplacementNamed(
               RouteConfig.data,
               arguments: {
-                "languageEnum": widget.languageEnum,
+                "groupCode": widget.groupCode,
               },
             ),
           ),
@@ -84,7 +84,7 @@ class _LevelViewState extends State<LevelView> {
                 await Get.find<RouteService>().pushReplacementNamed(
               RouteConfig.leitner,
               arguments: {
-                "languageEnum": widget.languageEnum,
+                "groupCode": widget.groupCode,
                 "level": LeitnerView.allLimitedLevel,
               },
             ),
@@ -99,8 +99,7 @@ class _LevelViewState extends State<LevelView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title:
-              Text("${widget.languageEnum.getLanguage()} Level Cards: $_count"),
+          title: Text("${widget.groupCode.getTitle()} Level Cards: $_count"),
           leading: InkWell(
             child: const Icon(Icons.arrow_back_ios),
             onTap: () {
@@ -154,7 +153,7 @@ class _LevelViewState extends State<LevelView> {
                     await Get.find<RouteService>().pushReplacementNamed(
                   RouteConfig.leitner,
                   arguments: {
-                    "languageEnum": widget.languageEnum,
+                    "groupCode": widget.groupCode,
                     "level": _optionModels[index - 1].level,
                   },
                 ),
@@ -176,7 +175,7 @@ class _LevelViewState extends State<LevelView> {
                   await Get.find<RouteService>().pushReplacementNamed(
                 RouteConfig.leitner,
                 arguments: {
-                  "languageEnum": widget.languageEnum,
+                  "groupCode": widget.groupCode,
                   "level": LeitnerView.allLevel,
                 },
               ),

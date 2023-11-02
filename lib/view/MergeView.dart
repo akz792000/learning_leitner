@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:learning_leitner/entity/CardEntity.dart';
+import 'package:learning_leitner/enums/GroupCode.dart';
 import 'package:learning_leitner/repository/CardRepository.dart';
 import 'package:learning_leitner/util/DateTimeUtil.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -32,6 +33,7 @@ class _MergeViewState extends State<MergeView> {
   late final TextEditingController _deController;
   late final TextEditingController _descController;
   late final TextEditingController _orderController;
+  late final GroupCode _groupCode;
 
   String? _fieldValidator(String? value) {
     if (value == null || value.isEmpty) {
@@ -55,22 +57,23 @@ class _MergeViewState extends State<MergeView> {
     _enController = TextEditingController(text: widget.cardEntity.en);
     _deController = TextEditingController(text: widget.cardEntity.de);
     _descController = TextEditingController(text: widget.cardEntity.desc);
+    _groupCode = widget.cardEntity.groupCode;
   }
 
   _onMerge() async {
     if (_formKey.currentState!.validate()) {
       var cardEntity = CardEntity(
-        id: int.parse(_idController.text),
-        created: _created,
-        modified: DateTimeUtil.now(),
-        level: CardEntity.initLevel,
-        subLevel: CardEntity.initSubLevel,
-        order: int.parse(_orderController.text),
-        fa: _faController.text,
-        en: _enController.text,
-        de: _deController.text,
-        desc: _descController.text,
-      );
+          id: int.parse(_idController.text),
+          created: _created,
+          modified: DateTimeUtil.now(),
+          level: CardEntity.initLevel,
+          subLevel: CardEntity.initSubLevel,
+          order: int.parse(_orderController.text),
+          fa: _faController.text,
+          en: _enController.text,
+          de: _deController.text,
+          desc: _descController.text,
+          groupCode: _groupCode);
       await _cardRepository.merge(cardEntity);
       Navigator.pop(context);
     }

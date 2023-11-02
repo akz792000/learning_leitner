@@ -16,5 +16,4 @@ class RouteService {
   void pop() {
     navigatorKey.currentState!.pop();
   }
-
 }

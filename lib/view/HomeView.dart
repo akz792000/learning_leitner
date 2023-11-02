@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:learning_leitner/enums/CountryEnum.dart';
+import 'package:learning_leitner/enums/GroupCode.dart';
 
 import '../config/RouteConfig.dart';
 import '../model/OptionModel.dart';
@@ -27,7 +27,7 @@ class _HomeViewState extends State<HomeView> {
         onTap: () async => await Get.find<RouteService>().pushNamed(
               RouteConfig.level,
               arguments: {
-                "languageEnum": LanguageEnum.en,
+                "groupCode": GroupCode.english,
               },
             )),
     OptionModel(
@@ -38,7 +38,7 @@ class _HomeViewState extends State<HomeView> {
         onTap: () async => await Get.find<RouteService>().pushNamed(
               RouteConfig.level,
               arguments: {
-                "languageEnum": LanguageEnum.de,
+                "groupCode": GroupCode.deutsch,
               },
             )),
     OptionModel(
