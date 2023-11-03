@@ -2,9 +2,11 @@ import 'package:hive/hive.dart';
 import 'package:learning_leitner/enums/GroupCode.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+import 'HiveTypeIds.dart';
+
 part 'CardEntity.g.dart';
 
-@HiveType(typeId: 1)
+@HiveType(typeId: HiveTypeIds.CARD_ID)
 class CardEntity {
   static const int initLevel = 0;
   static const int initSubLevel = 1;

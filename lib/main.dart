@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:learning_leitner/entity/InfoEntity.dart';
 import 'package:learning_leitner/repository/CardRepository.dart';
+import 'package:learning_leitner/repository/InfoRepository.dart';
 import 'package:learning_leitner/service/RouteService.dart';
 
 import 'config/DependencyConfig.dart';
@@ -29,9 +31,11 @@ Future<void> setup() async {
 
   // Registering the adapter
   Hive.registerAdapter(CardEntityAdapter());
+  Hive.registerAdapter(InfoEntityAdapter());
 
   // Opening the box
   await Hive.openBox(CardRepository.boxId);
+  await Hive.openBox(InfoRepository.boxId);
 
   // get the directory where the hive save data
   Directory directory = await path_provider.getApplicationDocumentsDirectory();

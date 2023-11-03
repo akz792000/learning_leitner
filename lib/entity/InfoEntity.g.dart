@@ -1,22 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'CardEntity.dart';
+part of 'InfoEntity.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class CardEntityAdapter extends TypeAdapter<CardEntity> {
+class InfoEntityAdapter extends TypeAdapter<InfoEntity> {
   @override
-  final int typeId = HiveTypeIds.CARD_ID;
+  final int typeId = HiveTypeIds.INFO_ID;
 
   @override
-  CardEntity read(BinaryReader reader) {
+  InfoEntity read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return CardEntity(
+    return InfoEntity(
       // id
       id: fields[0] as int,
 
@@ -30,36 +30,21 @@ class CardEntityAdapter extends TypeAdapter<CardEntity> {
           ? tz.TZDateTime.from(fields[2], tz.local)
           : tz.TZDateTime.now(tz.local),
 
-      // level
-      level: (fields[3] ?? 0) as int,
-
-      // subLevel
-      subLevel: (fields[4] ?? 0) as int,
-
-      // order
-      order: (fields[5] ?? 0) as int,
-
-      // fa
-      fa: (fields[6] ?? "") as String,
-
-      // en
-      en: (fields[7] ?? "") as String,
-
-      // de
-      de: (fields[8] ?? "") as String,
-
-      // desc
-      desc: (fields[9] ?? "") as String,
-
       // groupCode
-      groupCode: GroupCode.values[fields[10] ?? GroupCode.english.index],
+      groupCode: GroupCode.values[fields[3] ?? GroupCode.english.index],
+
+      // key
+      key: (fields[4] ?? "") as String,
+
+      // value
+      value: (fields[5] ?? "") as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, CardEntity obj) {
+  void write(BinaryWriter writer, InfoEntity obj) {
     writer
-      ..writeByte(11)
+      ..writeByte(6)
 
       // id
       ..writeByte(0)
@@ -73,37 +58,18 @@ class CardEntityAdapter extends TypeAdapter<CardEntity> {
       ..writeByte(2)
       ..write(obj.modified)
 
-      // level
+      // val
       ..writeByte(3)
-      ..write(obj.level)
+      ..write(obj.groupCode.index)
 
-      // subLevel
+      // key
       ..writeByte(4)
-      ..write(obj.subLevel)
+      ..write(obj.key)
 
-      // order
+      // value
       ..writeByte(5)
-      ..write(obj.order)
-
-      // fa
-      ..writeByte(6)
-      ..write(obj.fa)
-
-      // en
-      ..writeByte(7)
-      ..write(obj.en)
-
-      // de
-      ..writeByte(8)
-      ..write(obj.de)
-
-      // desc
-      ..writeByte(9)
-      ..write(obj.desc)
-
-      // groupCode
-      ..writeByte(10)
-      ..write(obj.groupCode.index);
+      ..write(obj.value);
+    ;
   }
 
   @override
@@ -112,7 +78,7 @@ class CardEntityAdapter extends TypeAdapter<CardEntity> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is CardEntityAdapter &&
+      other is InfoEntityAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

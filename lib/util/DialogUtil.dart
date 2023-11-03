@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class DialogUtil {
   static okCancel(BuildContext context, String title, String description,
       VoidCallback? onPressed) {
-    return showDialog<String>(
+    showDialog<String>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
         title: Text(title),
@@ -27,7 +27,7 @@ class DialogUtil {
 
   static ok(BuildContext context, String title, String description,
       VoidCallback? onPressed) {
-    return showDialog<String>(
+    showDialog<String>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
         title: Text(title),
@@ -41,6 +41,16 @@ class DialogUtil {
             child: const Text('OK'),
           ),
         ],
+      ),
+    );
+  }
+
+  static hint(BuildContext context, String description) {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        insetPadding: EdgeInsets.symmetric(horizontal: 100),
+        content: Text(description),
       ),
     );
   }

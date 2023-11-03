@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:learning_leitner/entity/CardEntity.dart';
@@ -9,6 +10,7 @@ import 'package:learning_leitner/view/widget/IconButtonWidget.dart';
 import '../config/RouteConfig.dart';
 import '../enums/LanguageCode.dart';
 import '../enums/GroupCode.dart';
+import '../repository/InfoRepository.dart';
 import '../service/RouteService.dart';
 import '../util/DateTimeUtil.dart';
 import '../util/DialogUtil.dart';
@@ -31,6 +33,7 @@ class LeitnerView extends StatefulWidget {
 }
 
 class _LeitnerViewState extends State<LeitnerView> {
+  final _infoRepository = Get.find<InfoRepository>();
   final _cardRepository = Get.find<CardRepository>();
   final _cardService = Get.find<CardService>();
   final PageController _pageController = PageController(
@@ -149,6 +152,77 @@ class _LeitnerViewState extends State<LeitnerView> {
     }
   }
 
+  Widget _getTextChild() {
+    var message = '';
+    var underline = false;
+    switch (widget.groupCode) {
+      case GroupCode.english:
+        if (_languageCode == LanguageCode.fa) {
+          message = _cardEntity.fa;
+        } else {
+          message = _cardEntity.en;
+          underline = true;
+        }
+        break;
+      case GroupCode.deutsch:
+        if (_languageCode == LanguageCode.en) {
+          message = _cardEntity.en;
+        } else {
+          message = _cardEntity.de;
+          underline = true;
+        }
+        break;
+    }
+
+    List<String> wordsInMessage = message.split(' ');
+    var result = List<TextSpan>.empty(growable: true);
+    for (var index = 0; index < wordsInMessage.length; index++) {
+      var word = wordsInMessage[index];
+      var textStyle = TextStyle(
+        color: Colors.black,
+        fontSize: 30.0,
+        fontWeight: FontWeight.normal,
+      );
+      if (index != 0) {
+        result.add(TextSpan(
+          text: ' ',
+          style: textStyle,
+        ));
+      }
+      if (underline) {
+        var info = _infoRepository.findByGroupCodeAndKeyUpperCase(
+            widget.groupCode, word);
+        if (info != null) {
+          textStyle.apply(decoration: TextDecoration.underline);
+          result.add(TextSpan(
+            text: word,
+            style: textStyle.copyWith(decoration: TextDecoration.underline),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                DialogUtil.hint(context, info.value);
+              },
+          ));
+        } else {
+          result.add(TextSpan(
+            text: word,
+            style: textStyle,
+          ));
+        }
+      } else {
+        result.add(TextSpan(
+          text: word,
+          style: textStyle,
+        ));
+      }
+    }
+    return RichText(
+      textDirection: _languageCode.getDirection(),
+      text: TextSpan(
+        children: result,
+      ),
+    );
+  }
+
   List<Widget> _bottomBar() {
     var result = [
       // dislike
@@ -220,15 +294,6 @@ class _LeitnerViewState extends State<LeitnerView> {
     return result;
   }
 
-  String _getText() {
-    switch (widget.groupCode) {
-      case GroupCode.english:
-        return _languageCode == LanguageCode.fa ? _cardEntity.fa : _cardEntity.en;
-      case GroupCode.deutsch:
-        return _languageCode == LanguageCode.en ? _cardEntity.en : _cardEntity.de;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -294,16 +359,7 @@ class _LeitnerViewState extends State<LeitnerView> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(10.0),
-                            child: Center(
-                              child: Text(
-                                _getText(),
-                                textDirection: _languageCode.getDirection(),
-                                style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 30.0,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                            ),
+                            child: Center(child: _getTextChild()),
                           ),
                         ],
                       ),
