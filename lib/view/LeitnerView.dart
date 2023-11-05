@@ -191,7 +191,7 @@ class _LeitnerViewState extends State<LeitnerView> {
       }
       if (underline) {
         var info = _infoRepository.findByGroupCodeAndKeyUpperCase(
-            widget.groupCode, word);
+            widget.groupCode, word.replaceAll(",", ""));
         if (info != null) {
           textStyle.apply(decoration: TextDecoration.underline);
           result.add(TextSpan(
